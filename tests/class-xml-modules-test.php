@@ -12,7 +12,7 @@ class xml_file_test extends TestCase
 
 	public function testCreateXmlModules(): void
 	{ 
-		$obj = xml_file();
+		$obj = new xml_file();
 	}
 
 	function zobject_module_test()
