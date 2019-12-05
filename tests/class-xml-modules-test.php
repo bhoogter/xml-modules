@@ -5,7 +5,7 @@ declare(strict_types=1);
 use PHPUnit\Framework\TestCase;
 
 // include_once('module_test.php');
-require_once(__DIR__ . "../src/class-xml-modules.php");
+require_once(__DIR__ . "/../src/class-xml-modules.php");
 
 class xml_file_test extends TestCase
 {
