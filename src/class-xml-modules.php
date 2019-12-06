@@ -1,6 +1,6 @@
 <?php
 
-require_once('phar://'.__DIR__.'/class-xml-file.phar/internal/src/class-xml-file.php');
+require_once('phar://'.__DIR__.'/class-xml-file.phar/src/class-xml-file.php');
 
 class xml_modules extends xml_file
 {
