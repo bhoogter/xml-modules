@@ -13,6 +13,7 @@ class xml_file_test extends TestCase
 	public function testCreateXmlModules(): void
 	{ 
 		$obj = new xml_modules();
+		$this->assertNotNull($obj);
 	}
 
 	function zobject_module_test()
