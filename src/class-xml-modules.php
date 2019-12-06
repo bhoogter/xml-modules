@@ -1,6 +1,6 @@
 <?php
 
-include_once 'phar://github.com/bhoogter/class-xml-file/releases/download/0.2.45/class-xml-file.phar/internal/class-xml-fiule.php';
+require_once 'phar://class-xml-file.phar/internal/class-xml-fiule.php';
 
 class xml_modules extends xml_file
 {
