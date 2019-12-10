@@ -14,7 +14,8 @@ class xml_file_test extends TestCase
 	{ 
 		$obj = new xml_source();
 		$this->assertNotNull($obj);
-	}
+    }
+}
 
 // function zobject_source_test()
 // {
