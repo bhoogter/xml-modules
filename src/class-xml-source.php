@@ -1,9 +1,8 @@
 <?php
 
-date_default_timezone_set('America/New_York');
-include_once('class-module.php');
+require_once('class-xml-module.php');
 
-class juniper_source
+class xml_source
 {
     private $bench, $totaltime;
     private $sources;
@@ -11,15 +10,16 @@ class juniper_source
 
     function __construct()
     {
+		date_default_timezone_set('America/New_York');
         $mtime = microtime();
         $mtime = explode(" ", $mtime);
         $mtime = $mtime[1] + $mtime[0];
         $this->bench = $mtime;
-        $d = $this->localize(__DIR__);
         //print "<br/>zoSource::Construct() -- LOADING";
         //$this->backtrace();
-        $this->sources = array();
-        $this->add_xml_source("SYS", new juniper_modules());
+        $d = $this->localize($this->config_dir());
+		$this->sources = array();
+		$this->load_sources();
         $this->localize($d);
         $this->loaded = true;
         //print "<br/>zoSource::Construct() -- LOADED";
@@ -66,45 +66,45 @@ class juniper_source
 		if ($die_msg != "") die("<br/>" . $die_msg);
 	}
 	/////////////////////////////////////////////////////////////    
-
-
-	function zdb($id)
-	{
-		//print "<br/>zoSource::zdb($id)";
-		if ($id == "wpdb") {
-			include_once("class-zobject-db-wpdb.php");
-			return new zobject_db_wpdb();
-		}
-		if (!is_array($dbs)) $dbs = array();
-		if ($dbs[$id] == null) {
-			if ($this->FetchDSPart($id, "@id") != $id) return null;
-			$t = $this->FetchDSpart($id, "@type");
-
-			$db_host = $this->FetchDSPart($id, "@host");
-			$db_user = $this->FetchDSPart($id, "@user");
-			$db_pass = $this->FetchDSPart($id, "@pass");
-			$db_name = $this->FetchDSPart($id, "@dbname");
-
-			//print "<br/>zoSource::zdb: type=$t, host=$db_host, user=$db_user, pass=$db_pass, name=$db_name";
-			switch ($t) {
-				case "odbc":
-					include_once("class-zobject-db-odbc.php");
-					//                    $dbs[$id] = $l;
-					break;
-				case "mysql":
-					include_once("class-zobject-db-mysql.php");
-					$l = new zobject_db_mysql($id, $db_host, $db_user, $db_pass, $db_name);
-					if (!$l->db) unset($l);
-					else $dbs[$id] = $l;
-					break;
-				default:
-					trigger_error("Unable to connect to desired datasource [" . $id . "] because the type is unknown: " . $t, E_USER_WARNING);
-			}
-		}
-		return $dbs[$id];
-	}
-	
-/////////////////////////////////////////////////////////////    
+	//
+	// function zdb($id)
+	// {
+	// 	//print "<br/>zoSource::zdb($id)";
+	// 	if ($id == "wpdb") {
+	// 		include_once("class-zobject-db-wpdb.php");
+	// 		return new zobject_db_wpdb();
+	// 	}
+	// 	if (!is_array($dbs)) $dbs = array();
+	// 	if ($dbs[$id] == null) {
+	// 		if ($this->FetchDSPart($id, "@id") != $id) return null;
+	// 		$t = $this->FetchDSpart($id, "@type");
+    //
+	// 		$db_host = $this->FetchDSPart($id, "@host");
+	// 		$db_user = $this->FetchDSPart($id, "@user");
+	// 		$db_pass = $this->FetchDSPart($id, "@pass");
+	// 		$db_name = $this->FetchDSPart($id, "@dbname");
+    //
+	// 		//print "<br/>zoSource::zdb: type=$t, host=$db_host, user=$db_user, pass=$db_pass, name=$db_name";
+	// 		switch ($t) {
+	// 			case "odbc":
+	// 				include_once("class-zobject-db-odbc.php");
+	// 				//                    $dbs[$id] = $l;
+	// 				break;
+	// 			case "mysql":
+	// 				include_once("class-zobject-db-mysql.php");
+	// 				$l = new zobject_db_mysql($id, $db_host, $db_user, $db_pass, $db_name);
+	// 				if (!$l->db) unset($l);
+	// 				else $dbs[$id] = $l;
+	// 				break;
+	// 			default:
+	// 				trigger_error("Unable to connect to desired datasource [" . $id . "] because the type is unknown: " . $t, E_USER_WARNING);
+	// 		}
+	// 	}
+	// 	return $dbs[$id];
+	// }
+	//
+    /////////////////////////////////////////////////////////////    
+	function load_sources() { }
     function source_exists($id) { return isset($this->sources[$id]); }
 	function source_loaded($id) { return $this->source_exists($id) && !is_string($this->sources[$id]); }
     function get_file_id($file)
@@ -112,10 +112,10 @@ class juniper_source
         foreach ($this->sources as $k => $f) if ($f->filename == $file) return $k;
         return "";
     }
-    function add_source($id, $D)
+    function add_source($id, $D, $force=false)
     {
         //print "<br/>JUNIPER_SOURCE::add_source($id, ...)";
-        if ($this->source_exists($id)) return die("<br/>This id already exists: $id");
+        if (!$force && $this->source_exists($id)) return die("<br/>This id already exists: $id");
         return !!($this->sources[$id] = $D);
     }
     function add_file($file)
@@ -124,9 +124,9 @@ class juniper_source
         $this->add_source($id = uniqid(), $file);
         return $id;
     }
-    function add_xml_source($id, $x)
+    function add_xml_source($id, $x, $force=false)
     {
-        if ($this->source_exists($id)) return die("<br/>This id already exists: $id");
+        if (!$force && $this->source_exists($id)) return die("<br/>This id already exists: $id");
         $this->sources[$id] = $x;
         return true;
     }

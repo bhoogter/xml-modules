@@ -1,5 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
+use PHPUnit\Framework\TestCase;
+
+// include_once('module_test.php');
+require_once(__DIR__ . "/../src/class-xml-source.php");
+
+class xml_file_test extends TestCase
+{
+
+	public function testCreateXmlModules(): void
+	{ 
+		$obj = new xml_source();
+		$this->assertNotNull($obj);
+	}
+
 // function zobject_source_test()
 // {
 // 	include_once('module_test.php');
