@@ -2,7 +2,7 @@
 
 require_once('class-xml-module.php');
 
-class xml_source
+class source
 {
     private $bench, $totaltime;
     private $sources;
