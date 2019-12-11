@@ -33,8 +33,7 @@ $a[$i-1] : "";
 	abstract public function execute_to_array($sql, $keyfield="");
 	abstract public function execute_to_list($sql, $keyfield="");
 	abstract public function execute_to_value($sql, $keyfield="");
-	abstract public function execute_to_xml($sql, $Extra="", 
-&$Count=0);
+	abstract public function execute_to_xml($sql, $Extra="", $Count=0);
 	static function InterpretInteractiveSQLPart($F)
 		{
 //print_r($f);
