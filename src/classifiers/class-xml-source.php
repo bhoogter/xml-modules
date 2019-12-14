@@ -1,6 +1,9 @@
 <?php
 
-class xml_module extends xml_file
+require_once("phar://../class-xml-file.phar/src/class-xml-file.php");
+require_once("../class-source-classifier.php");
+
+class xml_source extends xml_file implements source_classifier
 	{
 	public $ID;
 	public $longdesc;

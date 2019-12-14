@@ -1,3 +1,5 @@
+<?php
+
 abstract class zobject_db
 	{
 	public $gid;

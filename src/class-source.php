@@ -1,8 +1,10 @@
 <?php
 
-require_once('class-xml-module.php');
+require_once('phar://class-xml-file.phar/src/class-xml-file.php');
+require_once('classifiers/class-source-classifier.php');
+require_once('classifiers/class-xml-module.php');
 
-class source
+class source extends source_classifier
 {
     private $bench, $totaltime;
     private $sources;
@@ -10,11 +12,8 @@ class source
 
     function __construct()
     {
-		date_default_timezone_set('America/New_York');
-        $mtime = microtime();
-        $mtime = explode(" ", $mtime);
-        $mtime = $mtime[1] + $mtime[0];
-        $this->bench = $mtime;
+        date_default_timezone_set('America/New_York');
+        $this->bench = $this->milliseconds();
         //print "<br/>zoSource::Construct() -- LOADING";
         //$this->backtrace();
         $d = $this->localize($this->config_dir());
@@ -31,21 +30,18 @@ class source
         //$this->backtrace();
         $this->save_files();
         //print "<br/>zoSource *** Destructed ***";
-        $mtime = microtime();
-        $mtime = explode(" ", $mtime);
-        $mtime = $mtime[1] + $mtime[0];
-        $endtime = $mtime;
-        $this->totaltime = ($endtime - $this->bench);
+
+        $this->totaltime = ($this->milliseconds($this->bench));
     }
 
-    function config_dir()    {        return __DIR__;    }
-    function include_handlers()    { include_once("handlers.php"); }
-    function include_functions()     { include_once("functions.php"); }
+    function config_dir() { return __DIR__;    }
+    function include_handlers() { include_once("handlers.php"); }
+    function include_functions() { include_once("functions.php"); }
 
-    function localizeto($d)    {        $old = getcwd();        @chdir($d);        return $old;    }
-    function localize($d = "")    { if ($d == "") return $this->localizeto($d); @chdir($d); return false; }
-    function stat_load()    {        if (!$this->AJAX) echo "This form was generated in " . $this->totaltime . " seconds";    }
-    function stat_files()    {        print "<br/>zoSource Files";        foreach ($this->sources as $f) print "<br/>" . $f . "\n";    }
+    function localizeto($d) { $old = getcwd(); @chdir($d); return $old; }
+    function localize($d = "") { if ($d == "") return $this->localizeto($d); @chdir($d); return false; }
+    function stat_load() { if (!$this->AJAX) echo "This form was generated in " . $this->totaltime . " seconds"; }
+    function stat_files() { print "<br/>zoSource Files"; foreach ($this->sources as $f) print "<br/>" . $f . "\n"; }
     function save_files()
     {
         foreach ($this->sources as $id => $f) {
@@ -55,7 +51,8 @@ class source
             unset($this->sources[$id]);
         }
 	}
-	
+    
+    function milliseconds($since = 0) { $mtime = microtime(); $mtime = explode(" ", $mtime); $mtime = $mtime[1] + $mtime[0]; return $mtime - $since; }
 	function backtrace($die_msg = "")
 	{
 		if (!function_exists("debug_backtrace")) return;
@@ -104,7 +101,7 @@ class source
 	// }
 	//
     /////////////////////////////////////////////////////////////    
-	function load_sources() { }
+    function load_sources() { }
     function source_exists($id) { return isset($this->sources[$id]); }
 	function source_loaded($id) { return $this->source_exists($id) && !is_string($this->sources[$id]); }
     function get_file_id($file)
@@ -112,7 +109,7 @@ class source
         foreach ($this->sources as $k => $f) if ($f->filename == $file) return $k;
         return "";
     }
-    function add_source($id, $D, $force=false)
+    function add_source($id, $D, $force = false)
     {
         //print "<br/>JUNIPER_SOURCE::add_source($id, ...)";
         if (!$force && $this->source_exists($id)) return die("<br/>This id already exists: $id");
@@ -124,42 +121,42 @@ class source
         $this->add_source($id = uniqid(), $file);
         return $id;
     }
-    function add_xml_source($id, $x, $force=false)
+    function add_xml_source($id, $x, $force = false)
     {
         if (!$force && $this->source_exists($id)) return die("<br/>This id already exists: $id");
         $this->sources[$id] = $x;
         return true;
     }
-    function remove_source($id, $save=true)
+    function remove_source($id, $save = true)
     {
-//print "<br/>remove_source($id)";
-		if (!$this->source_exists($id)) return false;
-		if ($save && $this->source_loaded($id)) @$this->sources[$id]->save();
+        //print "<br/>remove_source($id)";
+        if (!$this->source_exists($id)) return false;
+        if ($save && $this->source_loaded($id)) @$this->sources[$id]->save();
         unset($this->sources[$id]);
     }
     function load_source($id, $f = "")
     {
-		if (!$this->source_exists($id)) return false;
-		if ($this->source_loaded($id)) return true;
-		if ($f == "") $f = $this->sources[$id];
+        if (!$this->source_exists($id)) return false;
+        if ($this->source_loaded($id)) return true;
+        if ($f == "") $f = $this->sources[$id];
         $this->sources[$id] = new xml_file($f);
         return true;
     }
     function force_unknown_document($file)
     {
-//print "<br/>force_document_unkonwn($file)";
+        //print "<br/>force_document_unkonwn($file)";
         $id = $this->add_file($file);
         return $this->get_source($id);
     }
 
     function get_source($id)
     {
-		if (!$this->source_exists($id)) return null;
-		if (!$this->source_loaded($id)) $this->load_source($id);
+        if (!$this->source_exists($id)) return null;
+        if (!$this->source_loaded($id)) $this->load_source($id);
         return $this->sources[$id];
     }
 
-	function get_source_doc($id)
+    function get_source_doc($id)
     {
         if (!($x = $this->get_source($id))) return null;
         return $x->Doc;
@@ -169,17 +166,20 @@ class source
         //print "<br/>force_document($id, $file)";
         if (!$this->source_exists($id)) $this->add_xml_source($id, new xml_file($file));
         return $this->get_source($id);
-	}
-	
-	function initialize_datasource($id)
-	{
-		if ($this->get("//SYS/*/datasource[@id='$id']/@type") <> "xml") return false;
-		$r = $this->get("//SYS/*/datasource[@id='$id']/@src");
-		return $this->add_xml_source($id, new xml_file(FilePath('', $r)));
-	}
+    }
 
-	private function is_path($p)     { return substr($p, 0, 2) == "//";	}
-	
+    function initialize_datasource($id)
+    {
+        if ($this->get("//SYS/*/datasource[@id='$id']/@type") <> "xml") return false;
+        $r = $this->get("//SYS/*/datasource[@id='$id']/@src");
+        return $this->add_xml_source($id, new xml_file(FilePath('', $r)));
+    }
+
+    private function is_path($p)
+    {
+        return substr($p, 0, 2) == "//";
+    }
+
     private function path_split(&$id, &$p)
     {
         //print "<br/>path_split($id, $p)";
@@ -194,48 +194,46 @@ class source
         $p = implode("/", $t);
         return true;
     }
-    function node($p)
+    function nde($p)
     {
         if (!$this->path_split($id, $p)) return "";
-        $s = $this->get_source($id);
+        if (!($s = $this->get_source($id))) return "";
         return $s->fetch_node($p);
     }
-	function nde($p) { return $this->node($p); }
-    function nodes($p)
+    function nds($p)
     {
         if (!$this->path_split($id, $p)) return "";
-        $s = $this->get_source($id);
+        if (!($s = $this->get_source($id))) return "";
         return $s->fetch_nodes($p);
-	}
-	function nds($p) { return $this->nodes($p); }
+    }
     function def($p)
     {
         if (!$this->path_split($id, $p)) return "";
-        $s = $this->get_source($id);
+        if (!($s = $this->get_source($id))) return "";
         return $s->part_string($p);
     }
     function get($p)
     {
         if (!$this->path_split($id, $p)) return "";
-        $s = $this->get_source($id);
+        if (!($s = $this->get_source($id))) return "";
         return $s->fetch_part($p);
     }
     function set($p, $x)
     {
         if (!$this->path_split($id, $p)) return "";
-        $s = $this->get_source($id);
+        if (!($s = $this->get_source($id))) return "";
         return $s->set_part($p, $x);
     }
     function lst($p)
     {
         if (!$this->path_split($id, $p)) return "";
-        $s = $this->get_source($id);
+        if (!($s = $this->get_source($id))) return "";
         return $s->fetch_list($p);
     }
     function cnt($p)
     {
         if (!$this->path_split($id, $p)) return "";
-        $s = $this->get_source($id);
+        if (!($s = $this->get_source($id))) return "";
         return $s->count_parts($p);
     }
 }

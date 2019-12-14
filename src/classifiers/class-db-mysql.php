@@ -1,4 +1,5 @@
 <?php
+
 include_once("class-zobject-db.php");
 class zobject_db_mysql extends zobject_db
 	{
@@ -6,24 +7,19 @@ class zobject_db_mysql extends zobject_db
 		{
 		$this->type = "mysql";
 		if ($this->id == "wpdb") {$this->db = $wpdb;return;}
-//print "<br/>db-mysql::connect: id=".$this->id.", host=".$this->host.", 
-user=".$this->user.", pass=".$this->pass."";
+//print "<br/>db-mysql::connect: id=".$this->id.", host=".$this->host.", user=".$this->user.", pass=".$this->pass."";
 		if ($host != "") $this->host = $host;
 		if ($user != "") $this->user = $user;
 		if ($pass != "") $this->pass = $pass;
-		if (($this->db = mysql_connect($this->host, $this->user, 
-$this->pass, true))===false)
+		if (($this->db = mysql_connect($this->host, $this->user, $this->pass, true))===false)
 			{
-			trigger_error("Unable to connect to datasource 
-[".$this->id."]: ".mysql_error($this->db), E_USER_WARNING);
+			trigger_error("Unable to connect to datasource [".$this->id."]: ".mysql_error($this->db), E_USER_WARNING);
 			$this->close();
 			return;
 			}
 		if (!($r = mysql_select_db($this->name, $this->db)))
 			{
-			trigger_error("Unable to connect to desired 
-database [".$this->name."] on datasource [".$this->id."]: 
-".mysql_error($this->db), E_USER_WARNING);
+			trigger_error("Unable to connect to desired database [".$this->name."] on datasource [".$this->id."]: ".mysql_error($this->db), E_USER_WARNING);
 			$this->close();
 			return;
 			}
@@ -62,8 +58,7 @@ database [".$this->name."] on datasource [".$this->id."]:
 			}
 		$res=array();
 		$count = 0;
-		while($result != 0 && $r = myqsl_fetch_array($result,  
-MYSQL_BOTH))
+		while($result != 0 && $r = myqsl_fetch_array($result,  MYSQL_BOTH))
 			{
 			if (!isset($r[$keyfield])) $keyfield = "";
 			if ($keyfield == "")
@@ -91,7 +86,7 @@ MYSQL_BOTH))
 		$res=array();
 		
 		while($result != 0 && mysql_fetch_row($result)) 
-$res[]=mysql_result($result, $fieldnum);
+			$res[]=mysql_result($result, $fieldnum);
 		if ($result) mysql_free_result ($result);
 		return $res;
 		}
@@ -99,8 +94,7 @@ $res[]=mysql_result($result, $fieldnum);
 		{
 //print "<br/>db-mysql::execute_to_value($sql, $fieldnum)";
 		$result = mysql_query($sql,$this->db);
-		if ($result!=0 && mysql_fetch_row($result)) $res = 
-mysql_result($result, $fieldnum);
+		if ($result!=0 && mysql_fetch_row($result)) $res = mysql_result($result, $fieldnum);
 		if ($result) mysql_free_result ($result);
 		return $res;
 		}
@@ -111,15 +105,13 @@ mysql_result($result, $fieldnum);
 		$result = mysql_query($sql, $this->db);
 		if ($result===false) 
 			{
-//print "<br/>db-mysql::execute_to_xml: no result: 
-".mysql_error($this->db);
+//print "<br/>db-mysql::execute_to_xml: no result: ".mysql_error($this->db);
 			return "";
 			}
 		
 //		$rc = mysql_num_rows($result);
 //		if ($rc==-1) $rc = $token;
-		$x = "<?xml version='1.0' ?>\n<recordset $Extra 
-count='$rc'>\n";
+		$x = "<?xml version='1.0' ?>\n<recordset $Extra count='$rc'>\n";
 		
 		$count = 0;
 		$fc = mysql_num_fields($result);
@@ -133,10 +125,8 @@ count='$rc'>\n";
 			foreach($r as $a=>$b)
 				{
 				$a = strtolower($a);
-				$b = str_replace(array('&','<','>'), 
-array('&amp;','&lt;','$gt;'), $b);
-				$x = $x . "        <field 
-id='$a'><![CDATA[$b]]></field>\n";
+				$b = str_replace(array('&','<','>'), array('&amp;','&lt;','$gt;'), $b);
+				$x = $x . "        <field id='$a'><![CDATA[$b]]></field>\n";
 				}
 			$x = $x . "    </row>\n";
 			}
@@ -146,6 +136,4 @@ id='$a'><![CDATA[$b]]></field>\n";
 //die($x);
 		return $x;
 		}
-	}  //  class: zobject_db_mysqlS		
-?>
-
+	}
