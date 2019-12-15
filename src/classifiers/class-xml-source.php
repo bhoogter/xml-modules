@@ -1,7 +1,7 @@
 <?php
 
 require_once("phar://../class-xml-file.phar/src/class-xml-file.php");
-require_once("../class-source-classifier.php");
+require_once("class-source-classifier.php");
 
 class xml_source extends xml_file implements source_classifier
 	{
@@ -10,9 +10,6 @@ class xml_source extends xml_file implements source_classifier
 	public $shortdesc;
 	public $version;
 
-	public $Sources;
-	public $scan;
-	
 	public function clear()
 		{
 		parent::Clear();
@@ -23,23 +20,17 @@ class xml_source extends xml_file implements source_classifier
 		$this->version = "";
 		return false;
 		}
-		
-	static function ModuleFile($m)		{return juniper_module_dir("$m/zmodule.xml");}
-	static function ModuleExists($m)	{return file_exists(self::ModuleFile($m));}
-    
-    function load_module($m)
-		{
-//print "<br/>load($m), MF=".self::ModuleFile($m);
-		if (!self::ModuleExists($m)) return false;
-		if (!$this->load(self::ModuleFile($m))) return false;
 
-		$this->ID = $m; // $this->fetch_part('/module/@name');
-//print "<br/>ModuleID: (f=".self::ModuleFile($m).") " . $this->ID;
+	function type() { return "xml"; }
 
-		$this->longdesc = $this->fetch_part('//module/module-specification/description/long');
-		$this->shortdesc = $this->fetch_part('//module/module-specification/description/short');
-		$this->version= $this->fetch_part('//module/module-specification/description/version');
-		return true;
-		}
-		
-	}
+	function load() { return parent::load(); }
+	function save() { return parent::save(); }
+
+	function nde($p) { return parent::nde($p); }
+	function nds($p) { return parent::nds($p); }
+	function def($p) { return parent::def($p); }
+	function get($p) { return parent::get($p); }
+	function set($p, $v) { return parent::set($p, $v); }
+	function lst($p) { return parent::lst($p); }
+	function cnt($p) { return parent::cnt($p); }
+}
