@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
 
-// include_once('module_test.php');
 require_once(__DIR__ . "/../src/class-source.php");
 
 class xml_source_test extends TestCase
@@ -12,13 +11,13 @@ class xml_source_test extends TestCase
 
 	public function testCreateXmlSource(): void
 	{ 
-		$obj = new xml_source();
+		$obj = new source();
 		$this->assertNotNull($obj);
     }
 
 	public function testAccessSource(): void
 	{ 
-		$obj = new xml_source();
+		$obj = new source();
 		$obj->add_source("XML1", __DIR__ . "/data/test-xml-01.xml");
 
 		$result = $obj->get("//XML1//set[2]/x");
