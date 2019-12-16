@@ -1,8 +1,8 @@
 <?php
 
-require_once('phar://" . __DIR__ . "/class-xml-file.phar/src/class-xml-file.php');
-require_once('classifiers/class-source-classifier.php');
-require_once('classifiers/class-xml-module.php');
+require_once("phar://" . __DIR__ . "/class-xml-file.phar/src/class-xml-file.php");
+require_once("classifiers/class-source-classifier.php");
+require_once("classifiers/class-xml-module.php");
 
 class source extends source_classifier
 {
