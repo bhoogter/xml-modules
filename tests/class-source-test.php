@@ -23,6 +23,19 @@ class xml_source_test extends TestCase
 		$result = $obj->get("//XML1//set[2]/x");
 		$this->assertEquals("4", $result);
     }
+
+	public function testSoureWithTwoEntries(): void
+	{ 
+		$obj = new source();
+		$obj->add_source("XML1", __DIR__ . "/data/test-xml-01.xml");
+		$obj->add_source("OTHER", __DIR__ . "/data/test-xml-other.xml");
+
+		$result = $obj->get("//XML1//set[2]/x");
+		$this->assertEquals("4", $result);
+
+		$result = $obj->get("//OTHER//set[4]/y");
+		$this->assertEquals("11", $result);
+    }
 }
 
 // function zobject_source_test()
