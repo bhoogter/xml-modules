@@ -1,6 +1,6 @@
 <?php
 
-require_once("class-xml-source.php");
+require_once("class-source-classifier.php");
 
 class xml_modules extends xml_source
 {
