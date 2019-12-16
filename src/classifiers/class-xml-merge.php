@@ -3,11 +3,11 @@
 require_once("phar://" . __DIR__ . "/../class-xml-file.phar/src/class-xml-file.php");
 require_once(__DIR__ . "/class-source-classifier.php");
 
-class xml_modules extends xml_source
+class xml_merge extends xml_source
 {
     private $aPath;
 
-    function type() { return "merge"; }
+    function type() { return "xml_merge"; }
     function save($dst = '', $style = 'auto') { }
     function load($src = '')
     {

@@ -1,6 +1,6 @@
 <?php
 
-abstract class source_classifier {
+abstract interface source_classifier {
     public $ID;
     public $longdesc;
     public $shortdesc;
@@ -16,7 +16,7 @@ abstract class source_classifier {
     abstract function lst($p);
     abstract function cnt($p);
     abstract function load($src);
-    abstract function save();
+    abstract function save($f = '', $style = 'auto');
 
     function node($p) { return $this->nde($p); }
     function nodes($p) { return $this->nds($p); }
