@@ -15,7 +15,7 @@ abstract class source_classifier {
     abstract function set($p, $x);
     abstract function lst($p);
     abstract function cnt($p);
-    abstract function load();
+    abstract function load($src);
     abstract function save();
 
     function node($p) { return $this->nde($p); }

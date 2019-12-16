@@ -9,7 +9,7 @@ class xml_modules extends xml_source
 
     function type()    {        return "merge";    }
     function save()    { }
-    function load()
+    function load($src)
     {
         if ($this->NeedsUpdate()) {
             //print "<br />Reloading Modules...";
