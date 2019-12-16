@@ -28,14 +28,15 @@ class xml_source extends source_classifier
 		return false;
 	}
 
-	function load($src = '') { return $this->load($src); }
-	function save($dst = '', $style = 'auto') { return $this->save(); }
+	function load($src = '') { return $this->file->load($src); }
+	function save($dst = '', $style = 'auto') { return $this->file->save($dst, $style); }
+	function can_save() { return $this->file->can_save(); }
 
-	function nde($p) { return $this->nde($p); }
-	function nds($p) { return $this->nds($p); }
-	function def($p) { return $this->def($p); }
-	function get($p) { return $this->get($p); }
-	function set($p, $v) { return $this->set($p, $v); }
-	function lst($p) { return $this->lst($p); }
-	function cnt($p) { return $this->cnt($p); }
+	function nde($p) { return $this->file->nde($p); }
+	function nds($p) { return $this->file->nds($p); }
+	function def($p) { return $this->file->def($p); }
+	function get($p) { return $this->file->get($p); }
+	function set($p, $v) { return $this->file->set($p, $v); }
+	function lst($p) { return $this->file->lst($p); }
+	function cnt($p) { return $this->file->cnt($p); }
 }

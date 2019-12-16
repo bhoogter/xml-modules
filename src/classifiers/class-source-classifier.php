@@ -5,6 +5,7 @@ abstract class source_classifier {
     public $longdesc;
     public $shortdesc;
     public $version;
+    public $modified;
 
     abstract function type();
 
@@ -15,8 +16,10 @@ abstract class source_classifier {
     abstract function set($p, $x);
     abstract function lst($p);
     abstract function cnt($p);
+
     abstract function load($src);
     abstract function save($f = '', $style = 'auto');
+    abstract function can_save();
 
     function node($p) { return $this->nde($p); }
     function nodes($p) { return $this->nds($p); }
