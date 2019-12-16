@@ -10,10 +10,19 @@ require_once(__DIR__ . "/../src/class-xml-source.php");
 class xml_source_test extends TestCase
 {
 
-	public function testCreateXmlModules(): void
+	public function testCreateXmlSource(): void
 	{ 
 		$obj = new xml_source();
 		$this->assertNotNull($obj);
+    }
+
+	public function testAccessSource(): void
+	{ 
+		$obj = new xml_source();
+		$obj->add_source("XML1", __DIR__ . "/data/test-xml-01.xml");
+
+		$result = $obj->get("//XML1//set[2]/x");
+		$this->assertEquals("4", $result);
     }
 }
 
