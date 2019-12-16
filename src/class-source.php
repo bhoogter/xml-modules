@@ -35,6 +35,10 @@ class source extends source_classifier
         $this->totaltime = ($this->milliseconds($this->bench));
     }
 
+    function type() {return "source"; }
+    function load($src = '') {}
+    function save($f = '', $style = 'auto') {}
+
     function config_dir() { return __DIR__;    }
     function include_handlers() { include_once("handlers.php"); }
     function include_functions() { include_once("functions.php"); }
