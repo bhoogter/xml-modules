@@ -23,8 +23,8 @@ class xml_source extends xml_file implements source_classifier
 
 	function type() { return "xml"; }
 
-	function load($src) { return parent::load($src); }
-	function save() { return parent::save(); }
+	function load($src = '') { return parent::load($src); }
+	function save($dst = '', $style = 'auto') { return parent::save(); }
 
 	function nde($p) { return parent::nde($p); }
 	function nds($p) { return parent::nds($p); }

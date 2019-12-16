@@ -7,9 +7,9 @@ class xml_modules extends xml_source
 {
     private $aPath;
 
-    function type()    {        return "merge";    }
-    function save()    { }
-    function load($src)
+    function type() { return "merge"; }
+    function save($dst = '', $style = 'auto') { }
+    function load($src = '')
     {
         if ($this->NeedsUpdate()) {
             //print "<br />Reloading Modules...";
