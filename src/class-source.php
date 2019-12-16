@@ -1,6 +1,6 @@
 <?php
 
-require_once('phar://class-xml-file.phar/src/class-xml-file.php');
+require_once('phar://" . __DIR__ . "/class-xml-file.phar/src/class-xml-file.php');
 require_once('classifiers/class-source-classifier.php');
 require_once('classifiers/class-xml-module.php');
 
