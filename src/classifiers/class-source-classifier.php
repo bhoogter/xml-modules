@@ -1,6 +1,6 @@
 <?php
 
-abstract interface source_classifier {
+abstract class source_classifier {
     public $ID;
     public $longdesc;
     public $shortdesc;
