@@ -38,6 +38,7 @@ class source extends source_classifier
     function type() {return "source"; }
     function load($src = '') {}
     function save($f = '', $style = 'auto') {}
+    function can_save() { return false; }
 
     function config_dir() { return __DIR__;    }
     function include_handlers() { include_once("handlers.php"); }
