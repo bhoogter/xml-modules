@@ -6,7 +6,7 @@ use PHPUnit\Framework\TestCase;
 
 require_once(__DIR__ . "/../src/class-source.php");
 
-class xml_source_test extends TestCase
+class source_test extends TestCase
 {
 
 	public function testCreateXmlSource(): void
