@@ -40,8 +40,8 @@ class xml_merge extends xml_source
             $xml = $this->JoinModules();
         }
 
-        if (is_string($this->aPath) && file_exists($this->aPath)) $this->load($this->aPath);
-        else if (is_string($xml)) $this->load($this->aPath);
+        if (is_string($this->aPath) && file_exists($this->aPath)) parent::load($this->aPath);
+        else if (is_string($xml)) parent::load($this->aPath);
     }
 
     function get_module_list()
