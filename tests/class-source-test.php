@@ -28,7 +28,7 @@ class source_test extends TestCase
 	{ 
 		$obj = new source();
 		$obj->add_source("XML1", __DIR__ . "/data/test-xml-01.xml");
-		$obj->add_source("XML2", __DIR__ . "/data/test-xml-01.xml");
+		$obj->add_source("XML2", __DIR__ . "/data/test-xml-02.xml");
 		$obj->add_source("OTHER", __DIR__ . "/data/test-xml-other.xml");
 
 		$result = $obj->get("//XML1//set[2]/x");
