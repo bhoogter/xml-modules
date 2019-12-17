@@ -25,8 +25,8 @@ class xml_merge extends xml_source
         if ($n >= 2 && is_array($a[1])) $this->modules = $a[1];
         if ($n >= 2 && is_string($a[1])) $this->mScan = $a[1];
         
-        if ($n >= 3 && is_string($a[3])) $this->mRoot = $a[2];
-        if ($n >= 4 && is_string($a[4])) $this->mItem = $a[3];
+        if ($n >= 3 && is_string($a[2])) $this->mRoot = $a[2];
+        if ($n >= 4 && is_string($a[3])) $this->mItem = $a[3];
 
         if (substr($this->mPath, -1) != '/') $this->mPath .= '/';
         
