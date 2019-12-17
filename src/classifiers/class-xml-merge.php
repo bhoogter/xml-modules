@@ -28,8 +28,6 @@ class xml_merge extends xml_source
         if ($n >= 3 && is_string($a[2])) $this->mRoot = $a[2];
         if ($n >= 4 && is_string($a[3])) $this->mItem = $a[3];
 
-        if (substr($this->mPath, -1) != '/') $this->mPath .= '/';
-        
         $this->load();
     }
 
