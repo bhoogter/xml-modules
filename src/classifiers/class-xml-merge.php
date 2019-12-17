@@ -12,6 +12,7 @@ class xml_merge extends xml_source
     public $xml_item;
 
     function __construct() {
+        parent::__construct();
         $this->aPath = __DIR__ . "/all.xml";
         $this->mScan = __DIR__ . "/modules";
         $this->modules = array();
