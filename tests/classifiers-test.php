@@ -11,12 +11,12 @@ class classifiers_test extends TestCase
     public function testLoadXmlSourceLoads() {
         $obj = new xml_source();
         $this->assertNotNull($obj);
-        $this->assertEquals("xml", $obj->type());
+        $this->assertEquals("xml_source", $obj->type());
     }
 
     public function testLoadXmlMergeLoads() {
         $obj = new xml_merge();
         $this->assertNotNull($obj);
-        $this->assertEquals("merge", $obj->type());
+        $this->assertEquals("xml_merge", $obj->type());
     }
 }
