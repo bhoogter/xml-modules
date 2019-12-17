@@ -16,9 +16,7 @@ class classifiers_test extends TestCase
 
     public function testLoadXmlSourceLoadXml() {
         $obj = new xml_source(__DIR__ . 'data/test-xml-other.xml');
-        $this->assertEquals($obj);
-
-		$result = $obj->get("//set[@id='4']/y");
+        $result = $obj->get("//set[@id='4']/y");
 		$this->assertEquals("11", $result);
     }
 
@@ -30,8 +28,8 @@ class classifiers_test extends TestCase
 
     public function testLoadXmlMergeTestScan() {
         $obj = new xml_merge('', 'data/test-xml-??.xml', 'information', 'set');
-        $this->assertNotNull($obj);
         $this->assertEquals(4, $obj->cnt("//information/set"));
+        $this->assertEquals("6", $obj->cnt("//information/set[@id='2']/z"));
     }
 
 }
