@@ -14,6 +14,7 @@ class xml_source extends source_classifier
 		$n = func_num_args();
 		$a = func_get_args();
 		if ($n >= 1) $this->file = new xml_file($a[0]);
+		else $this->file = new xml_file();
 	}
 
 	public function clear()
