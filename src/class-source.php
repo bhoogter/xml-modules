@@ -52,6 +52,7 @@ class source extends source_classifier
     {
         foreach ($this->sources as $id => $f) {
             //print "<br/>zoSource::Destruct autosave - $f";
+            if (!$this->source_loaded($id)) continue;
             if ($f->modified && $f->can_save()) $f->save();        // attempt save if appropriate.
             unset($f);
             unset($this->sources[$id]);
