@@ -1,6 +1,6 @@
 <?php
 
-require_once("phar://" . __DIR__ . "/class-xml-file.phar/src/class-xml-file.php");
+require_once(__DIR__ . "/../vendor/autoload.php");
 require_once(__DIR__ . "/classifiers/class-source-classifier.php");
 require_once(__DIR__ . "/classifiers/class-xml-source.php");
 require_once(__DIR__ . "/classifiers/class-xml-merge.php");

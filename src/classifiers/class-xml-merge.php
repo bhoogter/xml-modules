@@ -1,6 +1,6 @@
 <?php
 
-require_once("phar://" . __DIR__ . "/../class-xml-file.phar/src/class-xml-file.php");
+require_once(__DIR__ . "../../vendor/autoload.php");
 require_once(__DIR__ . "/class-source-classifier.php");
 
 class xml_merge extends xml_source
