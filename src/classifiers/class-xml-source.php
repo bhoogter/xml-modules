@@ -1,6 +1,6 @@
 <?php
 
-require_once(__DIR__ . "../../vendor/autoload.php");
+require_once(__DIR__ . "/../../vendor/autoload.php");
 require_once(__DIR__ . "/class-source-classifier.php");
 
 class xml_source extends source_classifier
