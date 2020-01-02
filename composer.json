@@ -24,15 +24,6 @@
     ],
     "phar:build": "box build"
   },
-  "repositories": [
-    {
-        "type": "vcs",
-        "url": "https://github.com/bhoogter/xml-file"
-    }
-  ],
-  "require": {
-    "bhoogter/class-xml-file": "0.2.45"
-  },
   "require-dev": {
     "phpunit/phpunit": "^8"
   },
