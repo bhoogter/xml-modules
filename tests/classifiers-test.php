@@ -16,8 +16,8 @@ class classifiers_test extends TestCase
 
     public function testLoadXmlSourceLoadXml() {
         $obj = new xml_source(__DIR__ . 'data/test-xml-other.xml');
-        $result = $obj->get("//set[@id='4']/y");
-	$this->assertEquals("11", $result);
+        $result = $obj->get("//option[@name='option1']");
+	$this->assertEquals("aaa", $result);
     }
 
     public function testLoadXmlMergeLoads() {
