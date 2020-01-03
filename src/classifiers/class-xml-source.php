@@ -40,4 +40,5 @@ class xml_source extends source_classifier
 	function set($p, $v) { return $this->file->set($p, $v); }
 	function lst($p) { return $this->file->lst($p); }
 	function cnt($p) { return $this->file->cnt($p); }
+	function del($p) { return $this->file->del($p); }
 }
