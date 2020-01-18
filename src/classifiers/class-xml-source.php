@@ -1,8 +1,5 @@
 <?php
 
-require_once(__DIR__ . "../src/stub.php");
-require_once(__DIR__ . "/class-source-classifier.php");
-
 class xml_source extends source_classifier
 	{
 	public $file;

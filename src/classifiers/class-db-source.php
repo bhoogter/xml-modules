@@ -1,7 +1,5 @@
 <?php
 
-require_once("class-source-classifier.php");
-
 abstract class db_source extends source_classifier
 	{
 	public $gid;
