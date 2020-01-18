@@ -2,4 +2,5 @@
 class-xml-file.phar
 xml-modules.phar
 vendor/
+phars/
 composer.lock
