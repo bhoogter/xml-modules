@@ -238,4 +238,10 @@ class source extends source_classifier
         if (!($s = $this->get_source($id))) return "";
         return $s->count_parts($p);
     }
+    function del($p)
+    {
+        if (!$this->path_split($id, $p)) return "";
+        if (!($s = $this->get_source($id))) return "";
+        return $s->del($p);
+    }
 }
