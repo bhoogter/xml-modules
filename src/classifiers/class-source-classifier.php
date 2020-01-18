@@ -26,6 +26,7 @@ abstract class source_classifier {
     function nodes($p) { return $this->nds($p); }
     function fetch_node($p) { return $this->nde($p); }
     function fetch_nodes($p) { return $this->nodes($p); }
+    function delete_node($p) { return $this->del($p); }
     function part_string($p) { return $this->def($p); }
     function fetch_part($p) { return $this->get($p); }
     function set_part($p, $v) { return $this->set($p, $v); }

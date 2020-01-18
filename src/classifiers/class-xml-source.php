@@ -11,7 +11,6 @@ class xml_source extends source_classifier
 		$n = func_num_args();
 		$a = func_get_args();
 		if ($n >= 1) $this->file = new xml_file($a[0]);
-		else $this->file = new xml_file();
 	}
 
 	public function clear()
@@ -22,20 +21,22 @@ class xml_source extends source_classifier
 		$this->longdesc = "";
 		$this->shortdesc = "";
 		$this->version = "";
-		$this->file = new xml_file();
+		$this->file = null;
 		return false;
 	}
 
-	function load($src = '') { return $this->file->load($src); }
-	function save($dst = '', $style = 'auto') { return $this->file->save($dst, $style); }
-	function can_save() { return $this->file->can_save(); }
+	function load($src = '') { return $this->file != null ? $this->file->load($src) : false; }
+	function loadXML($xml) { return $this->file != null ? $this->file->loadXML($xml) : false; }
+	function save($dst = '', $style = 'auto') { return $this->file != null ? $this->file->save($dst, $style) : false; }
+	function saveXML($style = 'auto') { return $this->file != null ? $this->file->saveXML($style) : false; }
+	function can_save() { return $this->file != null ? $this->file->can_save() : false; }
 
-	function nde($p) { return $this->file->nde($p); }
-	function nds($p) { return $this->file->nds($p); }
-	function def($p) { return $this->file->def($p); }
-	function get($p) { return $this->file->get($p); }
-	function set($p, $v) { return $this->file->set($p, $v); }
-	function lst($p) { return $this->file->lst($p); }
-	function cnt($p) { return $this->file->cnt($p); }
-	function del($p) { return $this->file->del($p); }
+	function nde($p) { return $this->file != null ? $this->file->nde($p) : false; }
+	function nds($p) { return $this->file != null ? $this->file->nds($p) : false; }
+	function def($p) { return $this->file != null ? $this->file->def($p) : false; }
+	function get($p) { return $this->file != null ? $this->file->get($p) : false; }
+	function set($p, $v) { return $this->file != null ? $this->file->set($p, $v) : false; }
+	function lst($p) { return $this->file != null ? $this->file->lst($p) : false; }
+	function cnt($p) { return $this->file != null ? $this->file->cnt($p) : false; }
+	function del($p) { return $this->file != null ? $this->file->del($p) : false; }
 }
