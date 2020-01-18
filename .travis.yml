@@ -8,7 +8,7 @@ php:
   - '7.2'
 
 before_script: composer install
-script: phpunit --bootstrap src/autoload.php --test-suffix '-test.php,Test.php,.phpt' tests
+script: phpunit --bootstrap src/stub.php --test-suffix '-test.php,Test.php,.phpt' tests
 
 notifications:
   email: false
