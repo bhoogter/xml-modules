@@ -4,15 +4,8 @@ declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
 
-require_once(__DIR__ . "/../src/autoload.php");
-
 class classifiers_test extends TestCase
 {
-    public static function setupBeforeClass(): void
-    {
-        require_once("dependency");
-    }
-
     public function testLoadXmlSourceLoads()
     {
         $obj = new xml_source();

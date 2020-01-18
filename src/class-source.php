@@ -1,10 +1,5 @@
 <?php
 
-require_once(__DIR__ . "/../vendor/stub.php");
-require_once(__DIR__ . "/classifiers/class-source-classifier.php");
-require_once(__DIR__ . "/classifiers/class-xml-source.php");
-require_once(__DIR__ . "/classifiers/class-xml-merge.php");
-
 class source extends source_classifier
 {
     private $bench, $totaltime;
