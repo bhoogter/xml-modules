@@ -4,4 +4,4 @@ A commong source for data elements
 
 ## License
 
-- GPLv3
+- LGPLv3
