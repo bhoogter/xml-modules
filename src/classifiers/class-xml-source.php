@@ -25,8 +25,8 @@ class xml_source extends source_classifier
 		return false;
 	}
 
-	function load($src = '') { return $this->file != null ? $this->file->load($src) : false; }
-	function loadXML($xml) { return $this->file != null ? $this->file->loadXML($xml) : false; }
+	function load($src = '') { $this->file = new xml_file($src); return true; }
+	function loadXML($xml) { $this->file = new xml_file($xml); return true; }
 	function save($dst = '', $style = 'auto') { return $this->file != null ? $this->file->save($dst, $style) : false; }
 	function saveXML($style = 'auto') { return $this->file != null ? $this->file->saveXML($style) : false; }
 	function can_save() { return $this->file != null ? $this->file->can_save() : false; }

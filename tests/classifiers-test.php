@@ -36,8 +36,8 @@ class classifiers_test extends TestCase
 
     public function testLoadXmlMergeTestScan()
     {
-        $obj = new xml_merge('', 'data/test-xml-??.xml', 'information', 'set');
-        // $this->assertEquals(4, $obj->cnt("/information/set"));
-        // $this->assertEquals("6", $obj->cnt("//information/set[@id='2']/z"));
+        $obj = new xml_merge('', __DIR__ . '/data/test-xml-??.xml', 'information', 'set');
+        $this->assertEquals(4, $obj->cnt("/information/set"));
+        $this->assertEquals(1, $obj->cnt("//information/set[@id='2']/z"));
     }
 }
