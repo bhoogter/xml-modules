@@ -13,11 +13,11 @@ class zobject_query
 		}
 	static function data_mode($ZName)
 		{
-		if (juniper()->FetchObjPart($ZName, "sql/@src")=="wpdb") return "wpdb";
-		if (juniper()->FetchObjPart($ZName, "sql/@type")=="mysql") return "mysql";
-		if (juniper()->FetchObjPart($ZName, "xmlfile/@src")!="") return "xml";
-		if (juniper()->FetchObjPart($ZName, "phpsource/@item")!="") return "php";
-		if (juniper()->FetchObjPart($ZName, "wpoptions/@prefix")!="") return "wpo";
+		if (source()->FetchObjPart($ZName, "sql/@src")=="wpdb") return "wpdb";
+		if (source()->FetchObjPart($ZName, "sql/@type")=="mysql") return "mysql";
+		if (source()->FetchObjPart($ZName, "xmlfile/@src")!="") return "xml";
+		if (source()->FetchObjPart($ZName, "phpsource/@item")!="") return "php";
+		if (source()->FetchObjPart($ZName, "wpoptions/@prefix")!="") return "wpo";
 		return "";
 		}
 	static function get_result($ZName, $ZMode, $ZArgs, &$rc, &$tform)
@@ -38,8 +38,8 @@ class zobject_query
 				default:	return self::empty_recordset($ZName, $ZMode, $rc);
 				}
 			case "create": case "list-create":
-				$ixf = juniper()->FetchObjPart($ZName, "@key");
-				$Index = juniper()->KeyValue($ixf);
+				$ixf = source()->FetchObjPart($ZName, "@key");
+				$Index = source()->KeyValue($ixf);
 //log_file("zobject", "ixf=$ixf, Index=$Index");
 				return self::GetZObjectCreateQuery($Index, $ZName, $ZMode, $ZArgs, iOBJ()->options['key'], iOBJ()->options['prefix'], $rc);
 				break;
@@ -48,7 +48,7 @@ class zobject_query
 				$ZKey = iOBJ()->options['key'];
 				$r = iOBJ()->options['key-array'];
 //print "<br/>iOBJ options: ";print_r(iOBJ()->options);
-//juniper()->dump_iOBJ();
+//source()->dump_iOBJ();
 //log_file("zobject","Zmode=$ZMode, key=$ZKey, $r, count(keys)=".count($r));
 //print "<br/>ZN=$ZName, Zmode=$ZMode, key=$ZKey, $r, count(keys)=".count($r);
 //print_r($r);
@@ -56,17 +56,17 @@ class zobject_query
 //				if (is_array($r))
 					{
 					$emptycount=0;
-					foreach(array_values($r) as $l) if ($l!='' && juniper()->KeyValue($l)=="") $emptycount=$emptycount+1;
+					foreach(array_values($r) as $l) if ($l!='' && source()->KeyValue($l)=="") $emptycount=$emptycount+1;
 					if ($emptycount>0 || $ZMode=="find")
 						{
 print "<br/>building tform";
 						$tform = "<form name='GetKey' method='GET'>\n";
-						foreach($r as $zk) $tform = $tform . "$zk: <input name='$zk' value='".juniper()->KeyValue($zk)."'/><br/>\n";
+						foreach($r as $zk) $tform = $tform . "$zk: <input name='$zk' value='".source()->KeyValue($zk)."'/><br/>\n";
 						$tform = $tform . "<input type='submit' value='".($ZMode=="edit"?"Edit":"Show")."'/>\n";
 						$tform = $tform . "</form>\n";
 						return null;
 						}
-//print "<br/>sql: " .juniper()->FetchObjPart($ZName, "sql");
+//print "<br/>sql: " .source()->FetchObjPart($ZName, "sql");
 					}
 				if ($ZMode=="build") 
 					{
@@ -102,7 +102,7 @@ print "<br/>building tform";
 		}
 	static function invoke_save_trigger($s='post')
 		{
-		if (iOBJ()->options["$s-trigger"] != "") juniper()->php_hook("php:".iOBJ()->options["$s-trigger"]);
+		if (iOBJ()->options["$s-trigger"] != "") source()->php_hook("php:".iOBJ()->options["$s-trigger"]);
 		}
 	
 	static function save_form()
@@ -118,7 +118,7 @@ print "<br/>building tform";
 			{
 			$n = 1;
 			$q = "";
-			foreach(juniper()->FetchObjFields($o->name) as $f)
+			foreach(source()->FetchObjFields($o->name) as $f)
 				{
 				$v = urlencode($_REQUEST[$id]);
 //self::save_log("id=$id, f=$f, v=$v");
@@ -144,8 +144,8 @@ print "<br/>building tform";
 						$f = self::GetXMLFile($o->name, $o->args, $lst, $bse, $d);
 						if (!$f)
 							{
-							$f = juniper()->php_hook($d);
-							if (is_string($f)) $f = juniper()->force_unknown_document($f);
+							$f = source()->php_hook($d);
+							if (is_string($f)) $f = source()->force_unknown_document($f);
 							}
 						$bse = $o->FillInQueryStringKeys($bse, '', true);
 //self::save_log("b=$b");
@@ -178,8 +178,8 @@ print "<br/>building tform";
 						$f = self::GetXMLFile($o->name, $o->args, $lst, $bse, $d);
 						if (!$f)
 							{
-							$f = juniper()->php_hook($d);
-							if (is_string($f)) $f = juniper()->force_unknown_document($f);
+							$f = source()->php_hook($d);
+							if (is_string($f)) $f = source()->force_unknown_document($f);
 							}
 						$bse = $o->FillInQueryStringKeys($bse, '', true);
 //self::save_log("Adjust Position, bse=$bse, l=".$ZL);
@@ -224,7 +224,7 @@ print "<br/>building tform";
 		$v = str_replace(array("\\'","\\\"","\\\\"), array("'","\"","\\"), $v);
 //print "<br/>v=$v";
 //log_file("save", "v=$v");
-		if ($data_type != "") $dfD = juniper()->php_hook(juniper()->FetchDTPart($data_type, "@default"));
+		if ($data_type != "") $dfD = source()->php_hook(source()->FetchDTPart($data_type, "@default"));
 //print "<br/>dfD=$dfD";
 //		if ($v == "" && $dfD != "") $v = DFV($dfD);
 //print "<br/>v=$v";
@@ -246,12 +246,12 @@ print "<br/>building tform";
 		$v['_ZMode'] = $ZMode;
 		$px = $o->options['prefix'];
 		
-		$nkv = juniper()->KeyValue($ix=$o->options['index']);
+		$nkv = source()->KeyValue($ix=$o->options['index']);
 		if ($ix!="" && $nkv == "")
 			{
-			$def = juniper()->FetchObjFieldPart($ZName, $ix, "@default");
+			$def = source()->FetchObjFieldPart($ZName, $ix, "@default");
 //self::save_log("def=$def");
-			$nkv = iOBJ()->NormalizeInputField(juniper()->php_hook($def), juniper()->FetchObjFieldPart($ZName, $ix, "@datatype"));
+			$nkv = iOBJ()->NormalizeInputField(source()->php_hook($def), source()->FetchObjFieldPart($ZName, $ix, "@datatype"));
 			}
 		if ($ZMode=="delete")
 			{
@@ -260,11 +260,11 @@ print "<br/>building tform";
 			return $v;
 			}
 		$found = false;
-		foreach(juniper()->FetchObjFields($ZName) as $fid)
+		foreach(source()->FetchObjFields($ZName) as $fid)
 			{
 //self::save_log("FID=$fid");
 			if (!zobject_access::zobject_field_access($ZName, $fid, $ZMode)) continue;
-			$dt = juniper()->FetchObjFieldPart($ZName, $fid, "@datatype");
+			$dt = source()->FetchObjFieldPart($ZName, $fid, "@datatype");
 			if ($dt=="") $dt="string";
 //self::save_log("dt=$dt");
 			$m = 0;
@@ -279,7 +279,7 @@ print "<br/>building tform";
 					}
 				else
 					{
-					$mult = YesNoVal(juniper()->FetchObjFieldPart($ZName, $fid, "@multiple"),false);
+					$mult = YesNoVal(source()->FetchObjFieldPart($ZName, $fid, "@multiple"),false);
 					if ($mult)
 						{
 //self::save_log("Multi-Field Set: $fid";
@@ -368,18 +368,18 @@ function pre_save_result($v)
 		{
 //print "<br/>GetZObjectCreateQuery($Index, $ZName, $ZMode, $ZArgs, $Key, $prefix)";
 //log_file("zobject", "GetZObjectCreateQuery($Index, $ZName, $ZMode, $ZArgs, $Key, $prefix)");
-		$ixf=juniper()->FetchObjPart($ZName, "@index");
+		$ixf=source()->FetchObjPart($ZName, "@index");
 //log_file("zobject","ixf=$ixf");
 		
 		$X = self::recordset_header($ZName, $ZMode, 1, "")."\n<row>";
-		foreach(juniper()->FetchObjFields($ZName) as $l)
+		foreach(source()->FetchObjFields($ZName) as $l)
 			{
 //print "<br/>l=<b>$l</b>, ZName=$ZName";
 //log_file("zobject","l=$l, ZName=$ZName, ixf=$ixf, Key=".iOBJ()->options['key'];
 			$v = "";
-			if ($l == $ixf) $v = juniper_querystring::get_querystring_var($ZArgs, iOBJ()->options['key']);
-			if ($v=="") $v = juniper()->php_hook(juniper()->FetchObjFieldPart($ZName, $l, "@default"), $ZArgs);
-			if ($v=="") $v = juniper()->php_hook(juniper()->FetchDTPart(juniper()->FetchObjFieldPart($ZName, $l, "@datatype"), "@default"), $ZArgs);
+			if ($l == $ixf) $v = source_querystring::get_querystring_var($ZArgs, iOBJ()->options['key']);
+			if ($v=="") $v = source()->php_hook(source()->FetchObjFieldPart($ZName, $l, "@default"), $ZArgs);
+			if ($v=="") $v = source()->php_hook(source()->FetchDTPart(source()->FetchObjFieldPart($ZName, $l, "@datatype"), "@default"), $ZArgs);
 //log_file("zobject","v=$v");
 			$X = $X . "<field id='$l'><![CDATA[$v]]></field>";
 			}
@@ -396,10 +396,10 @@ function pre_save_result($v)
 	static function GetZObjectSQL($ZName, $ZMode, $ZArgs)
 		{
 //print "<br/>GetZObjectSQL($ZName, $ZMode, $ZArgs)";
-		$sql = juniper()->FetchObjPart($ZName, "sql[@type='$ZMode']");
+		$sql = source()->FetchObjPart($ZName, "sql[@type='$ZMode']");
 		if ($sql=="") print "<br/>No SQL for requested operation: $ZMode";
 //print "<br/>sql[@type='$ZMode']: $sql";
-//		if ($sql=="") $sql = juniper()->FetchObjPart($ZName, "sql");
+//		if ($sql=="") $sql = source()->FetchObjPart($ZName, "sql");
 //print "<br/>GetZObjectSQL($ZName, $ZMode, $ZArgs): $sql";
 		return $sql;
 		}
@@ -460,9 +460,9 @@ function pre_save_result($v)
 	static function GetZObjectMultiQuery($ZName, $ZMode, $ZArgs, $Key, $prefix, &$rc)
 		{
 //print "<br/>GetZObjectMultiQuery($ZName, $ZMode, $ZArgs, $Key, $prefix, $AsList)";
-		$S1 = juniper()->FetchObjPart($ZName, "sql[@type='$ZMode']");
-		$S2 = juniper()->FetchObjPart($ZName, "sql[@type='list']");
-		$S3 = juniper()->FetchObjPart($ZName, "sql");
+		$S1 = source()->FetchObjPart($ZName, "sql[@type='$ZMode']");
+		$S2 = source()->FetchObjPart($ZName, "sql[@type='list']");
+		$S3 = source()->FetchObjPart($ZName, "sql");
 		$ActualSQL = ChooseBest($S1, $S2, $S3); //FetchObjPart($ZName, "sql");
 //print "<br/>Multi-ActualSQL=$ActualSQL";
 		switch( self::data_mode($ZName) )
@@ -487,39 +487,39 @@ function pre_save_result($v)
 	static function GetXMLFile($ZName, $ZArgs, &$Lst="", &$Bse="", &$d="")
 		{
 //print "<br/>GetXMLFile($ZName, $ZArgs, &$Lst, &$Bse, &$d)";
-		$id = juniper()->FetchObjPart($ZName, 'xmlfile/@src');
+		$id = source()->FetchObjPart($ZName, 'xmlfile/@src');
 //print "<br/>id=$id";
-		if (juniper()->is_php_hook($id))
+		if (source()->is_php_hook($id))
 			{
-			$Lst = juniper()->FetchObjPart($ZName, 'xmlfile/@list');
-			$Bse = juniper()->FetchObjPart($ZName, 'xmlfile/@base');
+			$Lst = source()->FetchObjPart($ZName, 'xmlfile/@list');
+			$Bse = source()->FetchObjPart($ZName, 'xmlfile/@base');
 			}
 		else
 			{
 			if (strstr($id, ".xml") !== false) // specified xml file
 				{
 				$d = $id;
-				$Lst = juniper()->FetchObjPart($ZName, 'xmlfile/@list');
-				$Bse = juniper()->FetchObjPart($ZName, 'xmlfile/@base');
+				$Lst = source()->FetchObjPart($ZName, 'xmlfile/@list');
+				$Bse = source()->FetchObjPart($ZName, 'xmlfile/@base');
 				}
 			else					// prob id
 				{
-				$d = juniper()->FetchDSPart($id, '@src');
-				$Lst = ChooseBest(juniper()->FetchObjPart($ZName, 'xmlfile/@list'), juniper()->FetchDSPart($id, '@list'));
-				$Bse = ChooseBest(juniper()->FetchObjPart($ZName, 'xmlfile/@base'), juniper()->FetchDSPart($id, '@base'));
-				$M = juniper()->FetchDSPart($id, '@module');
+				$d = source()->FetchDSPart($id, '@src');
+				$Lst = ChooseBest(source()->FetchObjPart($ZName, 'xmlfile/@list'), source()->FetchDSPart($id, '@list'));
+				$Bse = ChooseBest(source()->FetchObjPart($ZName, 'xmlfile/@base'), source()->FetchDSPart($id, '@base'));
+				$M = source()->FetchDSPart($id, '@module');
 				if (file_exists(WP_PLUGIN_DIR . "/zobjects/modules/$M/$d")) $d = WP_PLUGIN_DIR . "/zobjects/modules/$M/$d";
 				}
 			}
-		$Lst = juniper()->php_hook($Lst, $ZArgs);
+		$Lst = source()->php_hook($Lst, $ZArgs);
 		if ($Bse[strlen($Bse)-1]!='/') $Bse = $Bse . "/";
 //print "<br/>src=$id, lst=$Lst, Bse=$Bse";
-		if ($Lst=="") {juniper()->backtrace();Warning("No listpath for $ZName. (OBJFILE::/zobjectdefs/zobjectdef[@id='$ZName']/xmlfile/@list");die();}
-		if ($Bse=="") {juniper()->backtrace();Warning("No basepath for $ZName. (OBJFILE::/zobjectdefs/zobjectdef[@id='$ZName']/xmlfile/@base");die();}
-		if (juniper()->source_exists($id)) return juniper()->get_source($id);
+		if ($Lst=="") {source()->backtrace();Warning("No listpath for $ZName. (OBJFILE::/zobjectdefs/zobjectdef[@id='$ZName']/xmlfile/@list");die();}
+		if ($Bse=="") {source()->backtrace();Warning("No basepath for $ZName. (OBJFILE::/zobjectdefs/zobjectdef[@id='$ZName']/xmlfile/@base");die();}
+		if (source()->source_exists($id)) return source()->get_source($id);
 //		if (!file_exists($d)) $d = ZOSOURCE_DIR . $d;
 //print "<br/>query-xmlfile id=$id, d=$d";
-		if (!juniper()->is_php_hook($id)) return juniper()->force_document($id, $d);
+		if (!source()->is_php_hook($id)) return source()->force_document($id, $d);
 		$d = $id;
 		return null;
 		}
@@ -547,15 +547,15 @@ function pre_save_result($v)
 		$D = self::GetXMLFile($ZName, $ZArgs, $l, $b, $d);
 		if (!$D)
 			{
-			$D = juniper()->php_hook($d);
-			if (is_string($D)) $D = juniper()->force_unknown_document($D);
+			$D = source()->php_hook($d);
+			if (is_string($D)) $D = source()->force_unknown_document($D);
 			}
 		$b = iOBJ()->FillInQueryStringKeys($b, $ZArgs);
-//print "<br/>b=$b, f=".juniper()->php_hook(juniper()->FetchObjPart($ZName, 'xmlfile/@src'), $ZArgs);
+//print "<br/>b=$b, f=".source()->php_hook(source()->FetchObjPart($ZName, 'xmlfile/@src'), $ZArgs);
 		if (!isset($D)) 
 			{
 			Warning("Failed to load file: $d", "ZObj::GetZObjectXMLFile");
-			juniper()->backtrace();
+			source()->backtrace();
 			return "";
 			}
 		if ($D->count_parts(substr($b, 0, strlen($b)-1))==0) 
@@ -565,28 +565,28 @@ print "<br/>GetZObjectXmlFile - no parts, empty recordset.  <br/><b>b=</b>$b<br/
 			}
 		$index = iOBJ()->options['index'];
 		$key = iOBJ()->options['key'];
-		$ixval = juniper_querystring::get_querystring_var($ZArgs, $key);
+		$ixval = source_querystring::get_querystring_var($ZArgs, $key);
 //print "<br/>index=$index, key=$key, ixval=$ixval";
-//print "<br/>fields: ".print_r(juniper()->FetchObjFields($ZName));
-		foreach(juniper()->FetchObjFields($ZName) as $l)
+//print "<br/>fields: ".print_r(source()->FetchObjFields($ZName));
+		foreach(source()->FetchObjFields($ZName) as $l)
 			{
 			if ($l == $index)
 				$v = $ixval;
 			else
 				{
 //print "<br/>l=<b>$l</b>";
-				$m = xml_file::extend_path($b, $l, juniper()->FetchObjFieldPart($ZName, $l, "@access"));
+				$m = xml_file::extend_path($b, $l, source()->FetchObjFieldPart($ZName, $l, "@access"));
 //print "<br/>m=$m";
-//				$M = TrueFalseVal(juniper()->FetchObjFieldPart($ZName, $l, "@multiple"), false);
-				$M = juniper()->FetchObjFieldPart($ZName, $l, "@multiple")=="1";
+//				$M = TrueFalseVal(source()->FetchObjFieldPart($ZName, $l, "@multiple"), false);
+				$M = source()->FetchObjFieldPart($ZName, $l, "@multiple")=="1";
 //print "<br/>Multiple? " . YesNo($M);
-				$d = juniper()->FetchObjFieldPart($ZName, $l, "@datatype");
+				$d = source()->FetchObjFieldPart($ZName, $l, "@datatype");
 //print "<br/>field datatype=$d";
 				if (substr($d, 0, 1) == ":") $v = "";
 					else $v = $M ? self::GetMultiValuesFromDoc($D, $m) : $v = $D->fetch_part($m);
 				}
-			if ($v=="") $v = juniper()->php_hook(juniper()->FetchObjFieldPart($ZName, $l, "@default"), $ZArgs);
-			if ($v=="") $v = juniper()->php_hook(juniper()->FetchDTPart($d,"@default"), $ZArgs);
+			if ($v=="") $v = source()->php_hook(source()->FetchObjFieldPart($ZName, $l, "@default"), $ZArgs);
+			if ($v=="") $v = source()->php_hook(source()->FetchDTPart($d,"@default"), $ZArgs);
 //print "<br/>v=<u>$v</u>";
 			$x .= "    <field id='$l'>";
 			$x .= "<![CDATA[$v]]>";
@@ -606,27 +606,27 @@ print "<br/>GetZObjectXmlFile - no parts, empty recordset.  <br/><b>b=</b>$b<br/
 	static function GetZObjectMultiXmlFile($ZName, $ZMode, $ZArgs, &$rc)
 		{
 //print "<br/>GetZObjectMultiXmlFile($ZName, $ZMode, $ZArgs)";
-		if ($ZName=="") {Warning("<span style='font-weight:bold;font-size:20'>DIE:</span> <u>No ZName in GetZObjectXmlFile</u>");juniper()->backtrace();die();}
+		if ($ZName=="") {Warning("<span style='font-weight:bold;font-size:20'>DIE:</span> <u>No ZName in GetZObjectXmlFile</u>");source()->backtrace();die();}
 		$x = "";
 		$rx = $x . "<?xml version='1.0' encoding='ISO-8859-1'?>\n";
 		$D = self::GetXMLFile($ZName, $ZArgs, $listpath, $itempath, $F);
 //print "<br/>GetZObjectMultiXmlFile: F=$F";
-		$fl = juniper()->FetchObjFields($ZName);		// field list
+		$fl = source()->FetchObjFields($ZName);		// field list
 		$fc = count($fl);
 //print "<br/>Field List (n=$fc):";print_r($fl);
 //print "<br/>listpath=$listpath";
-		$listpath = juniper()->php_hook($listpath, $ZArgs);
+		$listpath = source()->php_hook($listpath, $ZArgs);
 //print "<br/>";print_r($listpath);
 		if (is_array($listpath)) $f = $listpath;  // php_hook returned an array!
 		else 
 			{
 			if (isset($D)) $lD = $D;
-			if (!isset($lD) && juniper()->is_php_hook($F)) 
+			if (!isset($lD) && source()->is_php_hook($F)) 
 				{
 //print "<br/>F=$F, td=$td";
-				$td = juniper()->php_hook($F,'');
+				$td = source()->php_hook($F,'');
 //print "<br/>F=$F, td=$td";
-				if (is_string($F)) $lD = juniper()->force_unknown_document($td);
+				if (is_string($F)) $lD = source()->force_unknown_document($td);
 				else if (is_object($F)) $lD = $F;
 				}
 //print "<br/>ld=$lD";
@@ -656,10 +656,10 @@ print "<br/>GetZObjectXmlFile - no parts, empty recordset.  <br/><b>b=</b>$b<br/
 			{
 //print "<br/>i=$i, fl[i]=".$fl[$i]."  ";print_r($fl);
 			$tmp = array();
-			$tmp["datatype"] = juniper()->FetchObjFieldPart($ZName, $fld, "@datatype");
-			$tmp["default"] = juniper()->FetchObjFieldPart($ZName, $fld, "@default");
-			$tmp["multiple"] = YesNoVal(juniper()->FetchObjFieldPart($ZName, $fld, "@multiple"),false);
-			$tmp["access"] = juniper()->FetchObjFieldPart($ZName, $fld, "@access");
+			$tmp["datatype"] = source()->FetchObjFieldPart($ZName, $fld, "@datatype");
+			$tmp["default"] = source()->FetchObjFieldPart($ZName, $fld, "@default");
+			$tmp["multiple"] = YesNoVal(source()->FetchObjFieldPart($ZName, $fld, "@multiple"),false);
+			$tmp["access"] = source()->FetchObjFieldPart($ZName, $fld, "@access");
 			$fieldinfo[$fld] = $tmp;
 			}
 //print "<br/>field defs: ";print_r($fieldinfo);
@@ -669,13 +669,13 @@ print "<br/>GetZObjectXmlFile - no parts, empty recordset.  <br/><b>b=</b>$b<br/
 		foreach($f as $rowx)
 			{
 			$tA = juniper_querystring::add_querystring_var($ZArgs, substr($key, 1), $rowx);
-			if (juniper()->is_php_hook($F))
+			if (source()->is_php_hook($F))
 				{
 //print "<br/>F=$F";
-//print "<br/>tA=<b>$tA</b>, F=<b><u>$F</u></b>, actual file=<b>".juniper()->php_hook($F, $tA)."</b>";
+//print "<br/>tA=<b>$tA</b>, F=<b><u>$F</u></b>, actual file=<b>".source()->php_hook($F, $tA)."</b>";
 				unset($D);
-				$Did = juniper()->add_file(juniper()->php_hook($F));
-				$D = juniper()->get_source($Did);
+				$Did = source()->add_file(source()->php_hook($F));
+				$D = source()->get_source($Did);
 //print "<br/>isset(D)=".(isset($D)?'y':'n');
 				}
 //print "<br/>index=$index, key=$key, rowx=$rowx, itempath=$itempath";
@@ -697,8 +697,8 @@ print "<br/>GetZObjectXmlFile - no parts, empty recordset.  <br/><b>b=</b>$b<br/
 //print "<br/>field datatype=".$fieldinfo[$l]["datatype"];
 					if (substr($fieldinfo[$l]["datatype"], 0, 1) == ":") $v = "";
 					 else $v = $M ? GetMultiValuesFromDoc($D, $m) : $v = $D->fetch_part($m);
-					if ($v=="") $v = juniper()->php_hook($fieldinfo[$l]["default"], $tA);
-					if ($v=="") $v = juniper()->php_hook(juniper()->FetchDTPart($fieldinfo[$l]["datatype"],"@default"), $tA);
+					if ($v=="") $v = source()->php_hook($fieldinfo[$l]["default"], $tA);
+					if ($v=="") $v = source()->php_hook(source()->FetchDTPart($fieldinfo[$l]["datatype"],"@default"), $tA);
 //print "<br/>v=<u>$v</u>";
 					$x .= "    <field id='$l'><![CDATA[$v]]></field>\n";
 					}
@@ -721,16 +721,16 @@ print "<br/>GetZObjectXmlFile - no parts, empty recordset.  <br/><b>b=</b>$b<br/
 		$D = self::GetXMLFile($ZName, $o->args, $l, $base, $d);
 		if (!$D)
 			{
-			$D = juniper()->php_hook($d);
-			if (is_string($D)) $D = juniper()->force_unknown_document($D);
+			$D = source()->php_hook($d);
+			if (is_string($D)) $D = source()->force_unknown_document($D);
 			}
-//self::save_log("base=$base, Args=$ZArgs, key=".$o->options['key'].", index=".$o->options['index'].", KV=".juniper()->KeyValue($o->options['index']));
-		$nkv = juniper()->KeyValue($ix = $o->options['index']);
+//self::save_log("base=$base, Args=$ZArgs, key=".$o->options['key'].", index=".$o->options['index'].", KV=".source()->KeyValue($o->options['index']));
+		$nkv = source()->KeyValue($ix = $o->options['index']);
 		if ($nkv == "") 
 			{
-			$def = juniper()->FetchObjFieldPart($ZName, $ix, "@default");
+			$def = source()->FetchObjFieldPart($ZName, $ix, "@default");
 //self::save_log("def=$def");
-			$nkv = iOBJ()->NormalizeInputField(juniper()->php_hook($def, $ZArgs), juniper()->FetchObjFieldPart($ZName, $ix, "@datatype"));
+			$nkv = iOBJ()->NormalizeInputField(source()->php_hook($def, $ZArgs), source()->FetchObjFieldPart($ZName, $ix, "@datatype"));
 			}
 		if ($ZMode=="create")
 			{
@@ -739,16 +739,16 @@ print "<br/>GetZObjectXmlFile - no parts, empty recordset.  <br/><b>b=</b>$b<br/
 			$ZArgs = juniper_querystring::add_querystring_var($ZArgs, $ix, $nkv);
 			}
 		else
-			$base = str_replace('@'.$o->options['key'], juniper()->KeyValue($o->options['key'], $ZArgs), $base);
+			$base = str_replace('@'.$o->options['key'], source()->KeyValue($o->options['key'], $ZArgs), $base);
 //self::save_log("ix=$ix, nkv=$nkv, base=$base, args=".iOBJ()->args);
 		$base = $o->FillInQueryStringKeys($base);
 //self::save_log("ix=$ix, nkv=$nkv, base=$base");
 		$found = false;
-		foreach(juniper()->FetchObjFields($ZName) as $fid)
+		foreach(source()->FetchObjFields($ZName) as $fid)
 			{
 //self::save_log("FID=$fid");
 			if (!zobject_access::zobject_field_access($ZName, $fid, $ZMode)) continue;
-			$fa = juniper()->FetchObjFieldPart($ZName, $fid, "@access");
+			$fa = source()->FetchObjFieldPart($ZName, $fid, "@access");
 			if ($fa == "-") continue;
 			if ($fa == "@") $fa = "@" . $fid;
 			if ($fa == "")  $fa = $fid;
@@ -787,20 +787,20 @@ print "<br/>GetZObjectXmlFile - no parts, empty recordset.  <br/><b>b=</b>$b<br/
 //log_file("zobject", "GetZObjectPHP($ZName, $ZMode, $ZArgs, $Key, $Ix, $prefix)");
 //print "<br/>GetZObjectPHP($ZName, $ZMode, $ZArgs, $prefix)";
 		$rc = 1;
-		$f = juniper()->FetchObjPart($ZName, "phpsource/@item");
+		$f = source()->FetchObjPart($ZName, "phpsource/@item");
 		$key = iOBJ()->options['key'];
 		$val = juniper_querystring::get_querystring_var($ZArgs, $key);
 //log_file("zobject", "hook=$f, val=$val");
 //print "<br/>hook=$f, key=$key, val=$val";
-		$a = juniper()->php_hook($f, $val);
+		$a = source()->php_hook($f, $val);
 		if (!is_array($a)) return XMLToDoc(self::empty_recordset($ZName, $ZMode, $rc));
 		$x = self::recordset_header($ZName, $ZMode, 1, "")."";
 		$x = $x . "  <row>\n";
 		foreach($a as $b=>$c) 
 			{
 //print "<br/>b=".$b;
-			if ($c=="") $c = juniper()->php_hook(juniper()->FetchObjFieldPart($ZName, $b, "@default"), $ZArgs);
-			if ($c=="") $c = juniper()->php_hook(juniper()->FetchDTPart(juniper()->FetchObjFieldPart($ZName, $b, "@datatype"),"@default"), $ZArgs);
+			if ($c=="") $c = source()->php_hook(source()->FetchObjFieldPart($ZName, $b, "@default"), $ZArgs);
+			if ($c=="") $c = source()->php_hook(source()->FetchDTPart(source()->FetchObjFieldPart($ZName, $b, "@datatype"),"@default"), $ZArgs);
 			$x = $x . "    <field id='$b'><![CDATA[$c]]></field>\n";
 			}
 		$x = $x . "  </row>\n";
@@ -814,13 +814,13 @@ print "<br/>GetZObjectXmlFile - no parts, empty recordset.  <br/><b>b=</b>$b<br/
 		{
 //log_file("zobject", "GetZObjectMultiPHP($ZName, $ZMode, $ZArgs)");
 //print "<br/>GetZObjectMultiPHP($ZName, $ZMode, $ZArgs)";
-		$l = juniper()->FetchObjPart($ZName, "phpsource/@list");
+		$l = source()->FetchObjPart($ZName, "phpsource/@list");
 //log_file("zobject", "list hook=$l");
 //print "<br/>list hook=$l";
-		$L = juniper()->php_hook($l, $ZArgs);
+		$L = source()->php_hook($l, $ZArgs);
 //print "<br/>list=";print_r($L);
 		if (!is_array($L) || !count($L)) return self::empty_recordset($ZName, $ZMode, $rc);
-		$f = juniper()->FetchObjPart($ZName, "phpsource/@item");
+		$f = source()->FetchObjPart($ZName, "phpsource/@item");
 //log_file("zobject", "hook=$f");
 //print "<br/>hook=$f";
 		$token = "@@RECORD_COUNT-".uniqid()."@@";
@@ -833,15 +833,15 @@ print "<br/>GetZObjectXmlFile - no parts, empty recordset.  <br/><b>b=</b>$b<br/
 			{
 			$tA = juniper_querystring::add_querystring_var($ZArgs, substr($key, 1), $item);
 //print "<br/>item=$item";
-			if (is_array($a = juniper()->php_hook($f, $item)))
+			if (is_array($a = source()->php_hook($f, $item)))
 				{
 //print "<br/>item is...";  print_r($a);
 				$rc++;
 				$x = $x . "  <row>\n";
 				foreach($a as $b=>$c) 
 					{
-					if ($c=="") $c = juniper()->php_hook(juniper()->FetchObjFieldPart($ZName, $b, "@default"), $tA);
-					if ($c=="") $c = juniper()->php_hook(juniper()->FetchDTPart(juniper()->FetchObjFieldPart($ZName, $b, "@datatype"),"@default"), $tA);
+					if ($c=="") $c = source()->php_hook(source()->FetchObjFieldPart($ZName, $b, "@default"), $tA);
+					if ($c=="") $c = source()->php_hook(source()->FetchDTPart(source()->FetchObjFieldPart($ZName, $b, "@datatype"),"@default"), $tA);
 					$x = $x . "    <field id='$b'><![CDATA[$c]]></field>\n";
 					}
 				$x = $x . "  </row>\n";
@@ -858,8 +858,8 @@ print "<br/>GetZObjectXmlFile - no parts, empty recordset.  <br/><b>b=</b>$b<br/
 		{
 //log_file("zobject", "SaveZObjectToPHP($ZName, $ZMode, $ZArgs)");
 //print "<br/>SaveZObjectToPHP($ZName, $ZMode, $ZArgs)";
-		$s = juniper()->FetchObjPart($ZName, "phpsource/@save");
-		$r = juniper()->php_hook($s, $val);
+		$s = source()->FetchObjPart($ZName, "phpsource/@save");
+		$r = source()->php_hook($s, $val);
 		return $r;
 		}
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -871,7 +871,7 @@ print "<br/>GetZObjectXmlFile - no parts, empty recordset.  <br/><b>b=</b>$b<br/
 		if (!function_exists("get_option")) return self::empty_recordset();		// wp tie-in
 		$s  = self::recordset_header($ZName, $ZMode, 1); 
 		$s .= "  <row>\n";
-		foreach(juniper()->FetchObjFields($ZName) as $f)
+		foreach(source()->FetchObjFields($ZName) as $f)
 			$s .= "    <field id='$f'><![CDATA[" . get_option($f) . "]]></field>\n";
 		$s .= "  </row>\n";
 		$s .= "</recordset>\n";
@@ -885,7 +885,7 @@ print "<br/>GetZObjectXmlFile - no parts, empty recordset.  <br/><b>b=</b>$b<br/
 		{
 //print "<br/>SaveZObjectToWPO($ZName, $ZMode, $ZArgs)";
 		if (!function_exists("update_option")) return false;
-		foreach(juniper()->FetchObjFields($ZName) as $f)
+		foreach(source()->FetchObjFields($ZName) as $f)
 			{
 //print "<br/>field=$f, val=" . $_REQUEST[$f];
 			if (isset($_REQUEST[$f])) update_option($f, $_REQUEST[$f]);
@@ -893,4 +893,3 @@ print "<br/>GetZObjectXmlFile - no parts, empty recordset.  <br/><b>b=</b>$b<br/
 		return true;
 		}
 	}
-?>

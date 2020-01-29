@@ -10,22 +10,22 @@ class source extends source_classifier
     {
         date_default_timezone_set('America/New_York');
         $this->bench = $this->milliseconds();
-        //print "<br/>zoSource::Construct() -- LOADING";
-        //$this->backtrace();
+//print "<br/>zoSource::Construct() -- LOADING";
+//$this->backtrace();
         $d = $this->localize($this->config_dir());
 		$this->sources = array();
 		$this->load_sources();
         $this->localize($d);
         $this->loaded = true;
-        //print "<br/>zoSource::Construct() -- LOADED";
+//print "<br/>zoSource::Construct() -- LOADED";
     }
 
     function __destruct()
     {
-        //print "<br/>zoSource::Destruct()";
-        //$this->backtrace();
+//print "<br/>zoSource::Destruct()";
+//$this->backtrace();
         $this->save_files();
-        //print "<br/>zoSource *** Destructed ***";
+//print "<br/>zoSource *** Destructed ***";
 
         $this->totaltime = ($this->milliseconds($this->bench));
     }
@@ -46,7 +46,7 @@ class source extends source_classifier
     function save_files()
     {
         foreach ($this->sources as $id => $f) {
-            //print "<br/>zoSource::Destruct autosave - $f";
+//print "<br/>zoSource::Destruct autosave - $f";
             if (!$this->source_loaded($id)) continue;
             if ($f->modified && $f->can_save()) $f->save();        // attempt save if appropriate.
             unset($f);
@@ -113,7 +113,7 @@ class source extends source_classifier
     }
     function add_source($id, $D, $force = false)
     {
-        //print "<br/>JUNIPER_SOURCE::add_source($id, ...)";
+//print "<br/>JUNIPER_SOURCE::add_source($id, ...)";
         if (!$force && $this->source_exists($id)) return die("<br/>This id already exists: $id");
         return !!($this->sources[$id] = $D);
     }
@@ -131,22 +131,57 @@ class source extends source_classifier
     }
     function remove_source($id, $save = true)
     {
-        //print "<br/>remove_source($id)";
+//print "<br/>remove_source($id)";
         if (!$this->source_exists($id)) return false;
         if ($save && $this->source_loaded($id)) @$this->sources[$id]->save();
         unset($this->sources[$id]);
     }
     function load_source($id, $f = "")
     {
+// print "\n<br/>source::load_source($id, $f)";
         if (!$this->source_exists($id)) return false;
         if ($this->source_loaded($id)) return true;
-        if ($f == "") $f = $this->sources[$id];
-        $this->sources[$id] = new xml_file($f);
+        if ($f != "")  $this->sources[$id] = $f;
+        else $f = $this->sources[$id];
+
+// print "\n<br/>source::load_source - sourceid=$f";
+        if (substr($f, 0, 6) == "mysql:") {
+            $this->parse_db_args(substr($f, 6), $host, $user, $pass, $name);
+print "\n<br/>Loading mysql source... host=$host, user=$user, pass=$pass, name=$name";
+            $this->source[$id] = new mysql_db_source($host, $user, $pass, $name);
+        } else if (substr($f, 0, 3) == "mysql:") {
+            $this->source[$id] = new odbc_db_source();
+        } else {
+            $this->sources[$id] = new xml_file($f);
+        }
         return true;
+    }
+    function parse_db_args($str, &$host, &$user, &$pass, &$name) {
+        $host = '';
+        $user = 'root';
+        $pass = '';
+        $name = 'test';
+
+        $p = explode("@", $str);
+        $user_part = sizeof($p) >= 2 ? $p[0] : '';
+        $host_part = sizeof($p) >= 2 ? $p[1] : $p[0];
+// print "\n<br/>user_part=$user_part, host_part=$host_part";
+
+        if ($user_part != '') {
+            $r = explode(':', $user_part);
+            $user = $r[0];
+            $pass = sizeof($r) >= 2 ? $r[1] : '';
+        }
+
+        $s = explode("/", $host_part);
+
+        $host = $s[0];
+        $name = sizeof($s) >= 2 ? $s[1] : 'test';
+// print "\n<br/>Parsing mysql opts... host=$host, user=$user, pass=$pass, name=$name";
     }
     function force_unknown_document($file)
     {
-        //print "<br/>force_document_unkonwn($file)";
+//print "<br/>force_document_unkonwn($file)";
         $id = $this->add_file($file);
         return $this->get_source($id);
     }
@@ -165,7 +200,7 @@ class source extends source_classifier
     }
     function force_document($id, $file)
     {
-        //print "<br/>force_document($id, $file)";
+//print "<br/>force_document($id, $file)";
         if (!$this->source_exists($id)) $this->add_xml_source($id, new xml_file($file));
         return $this->get_source($id);
     }
@@ -184,12 +219,12 @@ class source extends source_classifier
 
     private function path_split(&$id, &$p)
     {
-        //print "<br/>path_split($id, $p)";
+//print "<br/>path_split($id, $p)";
         if (!$this->is_path($p)) return false;
         $p = substr($p, 2);
         $t = explode("/", $p);
         $id = $t[0];
-        //print "<br/>path_split: id=$id";
+//print "<br/>path_split: id=$id";
         if (!$this->source_exists($id) && !$this->initialize_datasource($id))
             $this->backtrace("SOURCE NOT FOUND: [$id]");
         $t[0] = "";
@@ -216,8 +251,11 @@ class source extends source_classifier
     }
     function get($p)
     {
+print "\n<br/>source::get($p)";
         if (!$this->path_split($id, $p)) return "";
+print "\nid=$id, p=$p";
         if (!($s = $this->get_source($id))) return "";
+print "\nCalling on source $s";
         return $s->fetch_part($p);
     }
     function set($p, $x)
@@ -243,5 +281,13 @@ class source extends source_classifier
         if (!$this->path_split($id, $p)) return "";
         if (!($s = $this->get_source($id))) return "";
         return $s->del($p);
+    }
+}
+
+if (!function_exists("source")) {
+    function source()
+    {
+        static $source;
+        return $source != null ? $source : ($source = new source());
     }
 }

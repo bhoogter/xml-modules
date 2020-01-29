@@ -18,8 +18,7 @@
 		if ($ok)
 			{
 //			$result = odbc_exec("SELECT @@identity AS I");
-//			if (odbc_fetch_row($result)) $I = 
-odbc_result($result, "I");
+//			if (odbc_fetch_row($result)) $I = odbc_result($result, "I");
 			}
 		if ($result) odbc_free_result ($result);
 		odbc_close($conn);
@@ -81,8 +80,7 @@ $res[$i]=odbc_result($result, $fieldnum);
 		$conn = odbc_connect(DB_DNS,DB_USR,DB_PWD);
 //print "<br/>DBExecuteToValue($SQL, $fieldnum)";
 		$result = odbc_exec($conn,$SQL);
-		if ($result!=0 && odbc_fetch_row($result)) $res = 
-odbc_result($result, $fieldnum);
+		if ($result!=0 && odbc_fetch_row($result)) $res = odbc_result($result, $fieldnum);
 		if ($result) odbc_free_result ($result);
 		odbc_close($conn);
 		return $res;
@@ -107,10 +105,8 @@ odbc_result($result, $fieldnum);
 				{
 				$fn = odbc_field_name($result, $i);
 				$fv = odbc_result($result,$i);
-				$fv = str_replace(array('&','<','>'), 
-array('&amp;','&lt;','$gt;'), $fv);
-				$x = $x . "        <field 
-id='$fn'><![CDATA[$fv]]></field>\n";
+				$fv = str_replace(array('&','<','>'), array('&amp;','&lt;','$gt;'), $fv);
+				$x = $x . "        <field id='$fn'><![CDATA[$fv]]></field>\n";
 				}
 			$x = $x . "    </row>\n";
 			}
@@ -121,6 +117,3 @@ id='$fn'><![CDATA[$fv]]></field>\n";
 		if ($rc == $token) $x = str_replace($token, $count, $x);
 		return $x;
 		}
-		
-?>
-
