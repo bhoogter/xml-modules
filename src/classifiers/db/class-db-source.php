@@ -19,7 +19,7 @@ abstract class db_source extends source_classifier
 		$this->user = ($n >= (++$i) && is_string($a[$i-1])) ? $a[$i-1] : "";
 		$this->pass = ($n >= (++$i) && is_string($a[$i-1])) ? $a[$i-1] : "";
 		$this->name = ($n >= (++$i) && is_string($a[$i-1])) ? $a[$i-1] : "";
-print "\n<br/>db-source::__constuct... host=$this->host, user=$this->user, pass=$this->pass, name=$this->name";
+// print "\n<br/>db-source::__constuct... host=$this->host, user=$this->user, pass=$this->pass, name=$this->name";
 
 		if ($n >= 1) $this->connect();
 		}

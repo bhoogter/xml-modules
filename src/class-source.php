@@ -147,8 +147,9 @@ class source extends source_classifier
 // print "\n<br/>source::load_source - sourceid=$f";
         if (substr($f, 0, 6) == "mysql:") {
             $this->parse_db_args(substr($f, 6), $host, $user, $pass, $name);
-print "\n<br/>Loading mysql source... host=$host, user=$user, pass=$pass, name=$name";
+// print "\n<br/>Loading mysql source... host=$host, user=$user, pass=$pass, name=$name";
             $this->source[$id] = new mysql_db_source($host, $user, $pass, $name);
+// print "\n<br/>mysql source laoded";
         } else if (substr($f, 0, 3) == "mysql:") {
             $this->source[$id] = new odbc_db_source();
         } else {
