@@ -3,7 +3,7 @@
 <modules>
     <module>
         <dependencies>
-            <dependency name="php-dependency-manager" group="bhoogter" version="1.0.3" />
+            <dependency name="php-dependency-manager" group="bhoogter" version="1.0.4" />
         </dependencies>
     </module>
 </modules>
