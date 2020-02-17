@@ -3,8 +3,8 @@
 <modules>
     <module>
         <dependencies>
-            <dependency group="bhoogter" name="xml-file" version="0.2.62" />
-            <dependency group="bhoogter" name="php-dependency-manager" version="1.0.4" />
+            <dependency group="bhoogter" name="xml-file" version="0.2.64" />
+            <dependency group="bhoogter" name="php-dependency-manager" version="1.0.6" />
         </dependencies>
     </module>
 </modules>
