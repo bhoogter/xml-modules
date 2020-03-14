@@ -5,7 +5,7 @@ use PHPUnit\Framework\TestCase;
 class source_test extends TestCase
 {
 
-	public static function setUpBeforeClass()
+	public static function setUpBeforeClass(): void
     {
     }
 
