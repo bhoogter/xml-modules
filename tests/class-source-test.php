@@ -5,6 +5,10 @@ use PHPUnit\Framework\TestCase;
 class source_test extends TestCase
 {
 
+	public static function setUpBeforeClass()
+    {
+    }
+
 	public function testCreateXmlSource(): void
 	{
 		$obj = new source();

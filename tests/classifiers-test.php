@@ -10,7 +10,12 @@ class classifiers_test extends TestCase
     {
         $obj = new xml_source();
         $this->assertNotNull($obj);
-        $this->assertEquals("xml_source", $obj->type());
+        $typ = $obj->type();
+        $gid = $obj->gid;
+
+        $this->assertEquals(str_replace("_", "", strtoupper($typ)) . "_", substr($gid, 0, strlen($typ)));
+        // $this->assertEquals("xml_source", $typ);
+        echo $obj->gid;
     }
 
     public function testXmlFileLoad() 
@@ -27,16 +32,10 @@ class classifiers_test extends TestCase
         $this->assertEquals("aaa", $result);
     }
 
-    public function testLoadXmlMergeLoads()
-    {
-        $obj = new xml_merge();
-        $this->assertNotNull($obj);
-        $this->assertEquals("xml_merge", $obj->type());
-    }
-
     public function testLoadXmlMergeTestScan()
     {
-        $obj = new xml_merge('', __DIR__ . '/data/test-xml-??.xml', 'information', 'set');
+        $obj = new xml_file();
+        $obj->merge(__DIR__ . '/data/test-xml-??.xml', 'information', 'set');
         $this->assertEquals(4, $obj->cnt("/information/set"));
         $this->assertEquals(1, $obj->cnt("//information/set[@id='2']/z"));
     }

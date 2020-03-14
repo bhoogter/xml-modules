@@ -1,6 +1,6 @@
 <?php
 
-class source extends source_classifier
+class source extends xml_file_base
 {
     private $bench, $totaltime;
     private $sources;
@@ -34,6 +34,7 @@ class source extends source_classifier
     function load($src = '') {}
     function save($f = '', $style = 'auto') {}
     function can_save() { return false; }
+    function merge($scan, $root = NULL, $item = NULL, $persist = NULL) { return false; }
 
     function config_dir() { return __DIR__;    }
     function include_handlers() { include_once("handlers.php"); }
@@ -153,7 +154,7 @@ class source extends source_classifier
         } else if (substr($f, 0, 3) == "mysql:") {
             $this->source[$id] = new odbc_db_source();
         } else {
-            $this->sources[$id] = new xml_file($f);
+            $this->sources[$id] = new xml_source($f);
         }
         return true;
     }
@@ -202,7 +203,7 @@ class source extends source_classifier
     function force_document($id, $file)
     {
 //print "<br/>force_document($id, $file)";
-        if (!$this->source_exists($id)) $this->add_xml_source($id, new xml_file($file));
+        if (!$this->source_exists($id)) $this->add_xml_source($id, new xml_source($file));
         return $this->get_source($id);
     }
 
@@ -252,11 +253,11 @@ class source extends source_classifier
     }
     function get($p)
     {
-print "\n<br/>source::get($p)";
+//print "\n<br/>source::get($p)";
         if (!$this->path_split($id, $p)) return "";
-print "\nid=$id, p=$p";
+//print "\nid=$id, p=$p";
         if (!($s = $this->get_source($id))) return "";
-print "\nCalling on source $s";
+//print "\nCalling on source $s";
         return $s->fetch_part($p);
     }
     function set($p, $x)
