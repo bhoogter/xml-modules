@@ -13,7 +13,7 @@ class classifiers_test extends TestCase
         $typ = $obj->type();
         $gid = $obj->gid;
 
-        $this->assertEquals(str_replace("_", "", strtoupper($typ)) . "_", substr($gid, 0, strlen($typ)));
+        $this->assertEquals($typ . "_", substr($gid, 0, strlen($typ) + 1));
         // $this->assertEquals("xml_source", $typ);
         echo $obj->gid;
     }

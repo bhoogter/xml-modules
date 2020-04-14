@@ -10,22 +10,20 @@ class source extends xml_file_base
     {
         date_default_timezone_set('America/New_York');
         $this->bench = $this->milliseconds();
-//print "<br/>zoSource::Construct() -- LOADING";
-//$this->backtrace();
+        php_logger::log("zoSource::Construct() -- LOADING");
         $d = $this->localize($this->config_dir());
 		$this->sources = array();
 		$this->load_sources();
         $this->localize($d);
         $this->loaded = true;
-//print "<br/>zoSource::Construct() -- LOADED";
+        php_logger::debug("zoSource::Construct() -- LOADED");
     }
-
+    
     function __destruct()
     {
-//print "<br/>zoSource::Destruct()";
-//$this->backtrace();
+        php_logger::log("zoSource::Destruct() -- LOADED");
         $this->save_files();
-//print "<br/>zoSource *** Destructed ***";
+        php_logger::debug("zoSource  *** Destructed ***");
 
         $this->totaltime = ($this->milliseconds($this->bench));
     }
@@ -47,7 +45,7 @@ class source extends xml_file_base
     function save_files()
     {
         foreach ($this->sources as $id => $f) {
-//print "<br/>zoSource::Destruct autosave - $f";
+            php_logger::log("zoSource::Destruct autosave - $f");
             if (!$this->source_loaded($id)) continue;
             if ($f->modified && $f->can_save()) $f->save();        // attempt save if appropriate.
             unset($f);
@@ -114,7 +112,7 @@ class source extends xml_file_base
     }
     function add_source($id, $D, $force = false)
     {
-//print "<br/>JUNIPER_SOURCE::add_source($id, ...)";
+        php_logger::log("zoSource::add_source($id, ...)");
         if (!$force && $this->source_exists($id)) return die("<br/>This id already exists: $id");
         return !!($this->sources[$id] = $D);
     }
@@ -132,25 +130,25 @@ class source extends xml_file_base
     }
     function remove_source($id, $save = true)
     {
-//print "<br/>remove_source($id)";
+        php_logger::log("remove_source($id)");
         if (!$this->source_exists($id)) return false;
         if ($save && $this->source_loaded($id)) @$this->sources[$id]->save();
         unset($this->sources[$id]);
     }
     function load_source($id, $f = "")
     {
-// print "\n<br/>source::load_source($id, $f)";
+        php_logger::log("source::load_source($id, $f)");
         if (!$this->source_exists($id)) return false;
         if ($this->source_loaded($id)) return true;
         if ($f != "")  $this->sources[$id] = $f;
         else $f = $this->sources[$id];
 
-// print "\n<br/>source::load_source - sourceid=$f";
+        php_logger::log("source::load_source - sourceid=$f");
         if (substr($f, 0, 6) == "mysql:") {
             $this->parse_db_args(substr($f, 6), $host, $user, $pass, $name);
-// print "\n<br/>Loading mysql source... host=$host, user=$user, pass=$pass, name=$name";
+            php_logger::log("Loading mysql source... host=$host, user=$user, pass=$pass, name=$name");
             $this->source[$id] = new mysql_db_source($host, $user, $pass, $name);
-// print "\n<br/>mysql source laoded";
+            php_logger::log("mysql source loaded");
         } else if (substr($f, 0, 3) == "mysql:") {
             $this->source[$id] = new odbc_db_source();
         } else {
@@ -183,7 +181,7 @@ class source extends xml_file_base
     }
     function force_unknown_document($file)
     {
-//print "<br/>force_document_unkonwn($file)";
+        php_logger::log("force_document_unkonwn($file)");
         $id = $this->add_file($file);
         return $this->get_source($id);
     }
@@ -202,7 +200,7 @@ class source extends xml_file_base
     }
     function force_document($id, $file)
     {
-//print "<br/>force_document($id, $file)";
+        php_logger::log("force_document($id, $file)");
         if (!$this->source_exists($id)) $this->add_xml_source($id, new xml_source($file));
         return $this->get_source($id);
     }
@@ -253,7 +251,7 @@ class source extends xml_file_base
     }
     function get($p)
     {
-//print "\n<br/>source::get($p)";
+        php_logger::trace("source::get($p)");
         if (!$this->path_split($id, $p)) return "";
 //print "\nid=$id, p=$p";
         if (!($s = $this->get_source($id))) return "";
