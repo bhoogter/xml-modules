@@ -1,6 +1,6 @@
 <?php
 
-abstract class db_source extends source_classifier
+abstract class db_source extends xml_file_base
 	{
 	public $id;
 	public $db;
@@ -25,7 +25,6 @@ abstract class db_source extends source_classifier
 		}
 	function __destruct() { $this->close(); }
 
-
 	function prepare_sql($s)	{return $s;}
 	
 	abstract public function connect($host="", $user="", $pass="");
@@ -35,8 +34,8 @@ abstract class db_source extends source_classifier
 	abstract public function execute_to_array($sql, $keyfield="");
 	abstract public function execute_to_list($sql, $keyfield="");
 	abstract public function execute_to_value($sql, $keyfield="");
-	abstract public function execute_to_xml($sql, $Extra="", &$Count=0);
-
+    abstract public function execute_to_xml($sql, $Extra="", &$Count=0);
+    
     function nde($p) {
 		print "\n<br/>NDE: db-wpdb(p=$p)";
 	}
@@ -60,11 +59,17 @@ abstract class db_source extends source_classifier
 	}
     function del($p) {
 		print "\n<br/>DEL: db-wpdb(p=$p)";
-	}
-
+    }
+    
+    function merge($scan, $root = NULL, $item = NULL, $persist = NULL) {}
     function load($src) {}
     function save($f = '', $style = 'auto') {}
     function can_save() { return false; }
+
+    function get_property_list() { return array(); }
+    function has_property($p) { return false; }
+    function get_property($p) { return null; }
+    function set_property($p, $v) { return null; }
 
 	static function InterpretInteractiveSQLPart($F)
 	{

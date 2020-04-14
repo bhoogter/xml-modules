@@ -6,37 +6,9 @@ use PHPUnit\Framework\TestCase;
 
 class classifiers_test extends TestCase
 {
-    public function testLoadXmlSourceLoads()
+    public function testLoadDbSource()
     {
-        $obj = new xml_source();
+        $obj = new mysql_db_source();
         $this->assertNotNull($obj);
-        $typ = $obj->type();
-        $gid = $obj->gid;
-
-        $this->assertEquals($typ . "_", substr($gid, 0, strlen($typ) + 1));
-        // $this->assertEquals("xml_source", $typ);
-        echo $obj->gid;
-    }
-
-    public function testXmlFileLoad() 
-    {
-        $obj = new xml_file(__DIR__ . '/data/test-xml-other.xml');
-        $result = $obj->get("//option[@name='option1']");
-        $this->assertEquals("aaa", $result);
-    }
-
-    public function testLoadXmlSourceLoadXml()
-    {
-        $obj = new xml_source(__DIR__ . '/data/test-xml-other.xml');
-        $result = $obj->get("//option[@name='option1']");
-        $this->assertEquals("aaa", $result);
-    }
-
-    public function testLoadXmlMergeTestScan()
-    {
-        $obj = new xml_file();
-        $obj->merge(__DIR__ . '/data/test-xml-??.xml', 'information', 'set');
-        $this->assertEquals(4, $obj->cnt("/information/set"));
-        $this->assertEquals(1, $obj->cnt("//information/set[@id='2']/z"));
     }
 }
