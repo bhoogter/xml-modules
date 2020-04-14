@@ -2,6 +2,8 @@
 
 class source extends xml_file_base
 {
+    private static $instance;
+    public static function instance() { return self::$instance != null ? self::$instance : (self::$instance = new source()); }
     private $bench, $totaltime;
     private $sources;
     public  $loaded;
@@ -285,9 +287,5 @@ class source extends xml_file_base
 }
 
 if (!function_exists("source")) {
-    function source()
-    {
-        static $source;
-        return $source != null ? $source : ($source = new source());
-    }
+    function source() { return source::instance(); }
 }
