@@ -190,8 +190,10 @@ class source extends xml_file_base
 
     function get_source($id)
     {
+        php_logger::debug("zoSource::get_source($id): ex: ". ($this->source_exists($id) ? 'y' : 'n') . ', ld: ' . ($this->source_loaded($id) ? 'y' : 'n'));
         if (!$this->source_exists($id)) return null;
         if (!$this->source_loaded($id)) $this->load_source($id);
+        php_logger::trace("zoSource::get_source($id):", $this->sources[$id]);
         return $this->sources[$id];
     }
 
