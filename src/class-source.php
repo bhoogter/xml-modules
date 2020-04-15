@@ -13,8 +13,8 @@ class source extends xml_file_base
         date_default_timezone_set('America/New_York');
         $this->bench = $this->milliseconds();
         php_logger::log("zoSource::Construct() -- LOADING");
-        $d = $this->localize($this->config_dir());
 		$this->sources = array();
+        $d = $this->localize($this->config_dir());
 		$this->load_sources();
         $this->localize($d);
         $this->loaded = true;
