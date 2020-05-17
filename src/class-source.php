@@ -109,13 +109,16 @@ class source extends xml_file_base
 	function source_loaded($id) { return $this->source_exists($id) && !is_string($this->sources[$id]); }
     function get_file_id($file)
     {
-        foreach ($this->sources as $k => $f) if ($f->filename == $file) return $k;
+        foreach ($this->sources as $k => $f) {
+            if (is_string($f) && $f == $file) return $k;
+            if (is_object($f) && $f->filename == $file) return $k;
+        }
         return "";
     }
     function add_source($id, $D, $force = false)
     {
         php_logger::log("zoSource::add_source($id, ...)");
-        if (!$force && $this->source_exists($id)) return die("<br/>This id already exists: $id");
+        if (!$force && $this->source_exists($id)) throw new Exception("<br/>This id already exists: $id");
         return !!($this->sources[$id] = $D);
     }
     function add_file($file)
