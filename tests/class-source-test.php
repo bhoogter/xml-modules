@@ -2,6 +2,8 @@
 declare(strict_types=1);
 use PHPUnit\Framework\TestCase;
 
+require_once(__DIR__ . "/logger-stub.php");
+
 class source_test extends TestCase
 {
     private const XML1 = __DIR__ . "/data/test-xml-01.xml";

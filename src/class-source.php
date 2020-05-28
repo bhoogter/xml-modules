@@ -43,7 +43,7 @@ class source extends xml_file_base
     function localizeto($d) { $old = getcwd(); @chdir($d); return $old; }
     function localize($d = "") { if ($d == "") return $this->localizeto($d); @chdir($d); return false; }
     function stat_load() { if (!$this->AJAX) echo "This form was generated in " . $this->totaltime . " seconds"; }
-    function stat_files() { print "<br/>zoSource Files"; foreach ($this->sources as $f) print "<br/>" . $f . "\n"; }
+    function stat_files() { php_logger::log("zoSource Files: ", $this->sources); }
     function save_files()
     {
         foreach ($this->sources as $id => $f) {
