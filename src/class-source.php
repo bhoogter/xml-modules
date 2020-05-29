@@ -6,7 +6,8 @@ class source extends xml_file_base
     public static function instance() { return self::$instance != null ? self::$instance : (self::$instance = new source()); }
     private $bench, $totaltime;
     private $sources;
-    public  $loaded;
+    public $loaded;
+    public $autosave = false;
 
     function __construct()
     {
@@ -24,7 +25,7 @@ class source extends xml_file_base
     function __destruct()
     {
         php_logger::log("zoSource::Destruct() -- LOADED");
-        $this->save_files();
+        if ($this->autosave) $this->save_files();
         php_logger::debug("zoSource  *** Destructed ***");
 
         $this->totaltime = ($this->milliseconds($this->bench));
