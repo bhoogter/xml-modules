@@ -1,6 +1,10 @@
 #!/bin/bash
 
 cd $(dirname $0)
-../php-dependency-manager/package
+
+pushd ../php-dependency-manager
+php ./buildPhar.php
+popd
+
 cp ../php-dependency-manager/php-dependency-manager.phar src/phars
 
